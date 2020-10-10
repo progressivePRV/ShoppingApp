@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">shoppingCartApp</string>
+    <string name="Email">Email</string>
+    <string name="password">Password</string>
+    <string name="Signin">Sign In</string>
+    <string name="signUp">Sign up</string>
+    <string name="FirstName">First Name</string>
+    <string name="lastName" >Last Name</string>
+    <string name="Male">Male</string>
+    <string name="Female">Female</string>
+    <string name="Age">Age</string>
+</resources>
