@@ -10,7 +10,7 @@ const fs = require('fs');
 
 const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://rojatkaraditi:AprApr_2606@test.z8ya6.mongodb.net/project5DB?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
+var client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
 var collection;
 var userItemsCollection;
 const tokenSecret = "wFq9+ssDbT#e2H9^";
@@ -25,8 +25,10 @@ var gateway = new braintree.BraintreeGateway({
   });
 
 var connectToUsersDb = function(req,res,next){
+    client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
     client.connect(err => {
       if(err){
+          closeConnection();
           return res.status(400).json({"error":"Could not connect to database: "+err});
       }
       collection = client.db("project5DB").collection("users");
@@ -36,9 +38,14 @@ var connectToUsersDb = function(req,res,next){
     });
 };
 
+var closeConnection = function(){
+    client.close();
+}
+
 var verifyToken = function(req,res,next){
     var headerValue = req.header("Authorization");
     if(!headerValue){
+        closeConnection();
         return res.status(400).json({"error":"Authorization header needs to be provided for using API"});
     }
 
@@ -50,10 +57,12 @@ var verifyToken = function(req,res,next){
             decoded = jwt.verify(token, tokenSecret);
             next();
           } catch(err) {
+            closeConnection();
             return res.status(400).json({"error":err});
           }
     }
     else {
+        closeConnection();
         return res.status(400).json({"error":"Appropriate authentication information needs to be provided"})
     }
 
@@ -79,6 +88,7 @@ route.post("/users/signup",[
 ],(request,response)=>{
     const err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     try{
@@ -94,6 +104,7 @@ route.post("/users/signup",[
           }, (error, resultResponse) => {
 
             if(error || !resultResponse.success){
+                closeConnection();
                 return response.status(400).json({"error":error});
             }
             if(resultResponse.success){
@@ -104,6 +115,7 @@ route.post("/users/signup",[
                     if(err){
                         // result={"error":err};
                         // responseCode=400;
+                        closeConnection();
                         return response.status(400).json({"error":err});
                     }
                     else{
@@ -126,10 +138,12 @@ route.post("/users/signup",[
                                     result=res.ops[0].getUser();
                                     result.token=token;
                                 }
+                                closeConnection();
                                 return response.status(responseCode).json(result);
                             });
                         }
                         else{
+                            closeConnection();
                             return response.status(400).json({"error":"user could not be created"});
                         }
                         
@@ -140,6 +154,7 @@ route.post("/users/signup",[
           });
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error});
     }
 }); 
@@ -151,6 +166,7 @@ route.get("/users/login",[
 
     const err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     
@@ -188,20 +204,23 @@ route.get("/users/login",[
                             result={"error":"Username or password is incorrect"};
                         }
                     }
-
+                    closeConnection();
                     return response.status(responseCode).json(result);
 
                 });
             }
             else{
+                closeConnection();
                 return response.status(400).json({"error":"credentials not provided for login"});
             }
         }
         else{
+            closeConnection();
             return response.status(400).json({"error":"Desired authentication type and value required for login"})
         }
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 
@@ -211,12 +230,15 @@ route.get("/shop/items",(request,response)=>{
     try{
         var rawdata = fs.readFileSync('discount.json');
         if(!rawdata){
+            closeConnection();
             return response.status(400).json({"error":"No items file found"});
         }
         var items = JSON.parse(rawdata);
+        closeConnection();
         return response.status(200).json(items);
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
@@ -226,30 +248,36 @@ route.get("/shop/items/:id",[
 ],(request,response)=>{
     var err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
 
     try{
         var rawdata = fs.readFileSync('discount.json');
         if(!rawdata){
+            closeConnection();
             return response.status(400).json({"error":"No items file found"});
         }
         var items = JSON.parse(rawdata);
         if(items && items.results && items.results.length>0){
             var item = items.results.find(it=>it.id==request.params.id);
             if(item){
+                closeConnection();
                 return response.status(200).json(item);
             }
             else{
+                closeConnection();
                 return response.status(400).json({"error":"No item found with id "+request.params.id});
             }
         }
         else{
+            closeConnection();
             return response.status(400).json({"error":"No items present"});
         }
         
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
@@ -264,15 +292,18 @@ route.put('/shop/items',[
 ],(request,response)=>{
     var err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
 
     var query = {"userId":new mongo.ObjectID(decoded._id)};
     userItemsCollection.find(query,{ projection: { cartItems: 1 } }).toArray((err,res)=>{
         if(err){
+            closeConnection();
             return response.status(400).json({"error":err});
         }
         else if(res.length<=0){
+            closeConnection();
             return response.status(400).json({"error":"no cart found for user"});
         }
         else{
@@ -288,6 +319,7 @@ route.put('/shop/items',[
                 }
                 else if(request.body.operation==='remove'){
                     if(parseInt(request.body.quantity)>parseInt(item.quantity)){
+                        closeConnection();
                         return response.status(400).json({"error":"trying to remove more items than present in cart"});
                     }
                     else if(parseInt(request.body.quantity)==parseInt(item.quantity)){
@@ -304,6 +336,7 @@ route.put('/shop/items',[
                 if(request.body.operation==='add'){
                     var rawdata = fs.readFileSync('discount.json');
                     if(!rawdata){
+                        closeConnection();
                         return response.status(400).json({"error":"No items file found"});
                     }
                     var data = JSON.parse(rawdata);
@@ -316,10 +349,12 @@ route.put('/shop/items',[
                         items.push(addItem);
                     }
                     else{
+                        closeConnection();
                         return response.status(400).json({"error":"No item with id "+request.body.id+" exists"});
                     }
                 }
                 else if(request.body.operation==='remove'){
+                    closeConnection();
                     return response.status(400).json({"error":"Item not present in cart to remove"});
                 }
             }
@@ -330,9 +365,11 @@ route.put('/shop/items',[
             var newQuery = {$set : updatedData};
             userItemsCollection.updateOne(query,newQuery,(err,reslt)=>{
                 if(err){
+                    closeConnection();
                     return response.status(400).json({"error":"cart could not be updated"});
                 }
                 else{
+                    closeConnection();
                     return response.status(200).json({"result":"cart updated"});
                 }
             })
@@ -345,20 +382,24 @@ route.get('/shop/costTotal',(request,response)=>{
     var query = {"userId":new mongo.ObjectID(decoded._id)};
     userItemsCollection.find(query).toArray((err,res)=>{
         if(err){
+            closeConnection();
             return response.status(400).json({"error":err});
         }
         else if(res.length<=0){
+            closeConnection();
             return response.status(400).json({"error":"no cart found for user"});
         }
         else{
             var rawdata = fs.readFileSync('discount.json');
             if(!rawdata){
+                closeConnection();
                 return response.status(400).json({"error":"No items file found"});
             }
             var data = JSON.parse(rawdata);
             
             var items = res[0].cartItems;
             if(items.length<=0){
+                closeConnection();
                 return response.status(200).json({"total":0.00});
             }
             else{
@@ -371,6 +412,7 @@ route.get('/shop/costTotal',(request,response)=>{
                     discountPrice = parseFloat(discountPrice) + (parseFloat(totalPrice)-parseFloat(discount));
                     cnt--;
                     if(cnt==0){
+                        closeConnection();
                         return response.status(200).json({"total":discountPrice.toFixed(2)});
                     }
                 });
@@ -383,9 +425,11 @@ route.get("/shop/customerToken",(request,response)=>{
     var query = {"_id":new mongo.ObjectID(decoded._id)};
     collection.find(query).toArray((err,res)=>{
         if(err){
+            closeConnection();
             return response.status(400).json({"error":err});
         }
         else if(res.length<=0){
+            closeConnection();
             return response.status(400).json({"error":"no user found with id "+decoded._id});
         }
         else{
@@ -397,6 +441,7 @@ route.get("/shop/customerToken",(request,response)=>{
                 }
               }, (err, res) => {
                   if(err){
+                      closeConnection();
                       return response.status(400).json({"error":err});
                   }
                   if(res && res.clientToken){
@@ -404,6 +449,7 @@ route.get("/shop/customerToken",(request,response)=>{
                     response.status(200).json({"clientToken":clientToken})
                   }
                   else{
+                    closeConnection();
                     return response.status(400).json({"error":"client token could not be generated"}); 
                   }
               });
