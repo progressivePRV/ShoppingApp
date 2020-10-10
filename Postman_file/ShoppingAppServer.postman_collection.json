@@ -232,7 +232,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgxNTI3ZTA2MTQ0MWExNDFjZjZjNzIiLCJmaXJzdE5hbWUiOiJhbmEiLCJsYXN0TmFtZSI6InNtaXRoIiwiZ2VuZGVyIjoiRmVtYWxlIiwiZW1haWwiOiJhbmFAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiODA5MjA4ODI0IiwiZXhwIjoxNjAyMzE0Mzk4LCJpYXQiOjE2MDIzMTA3OTh9.e36SQXktKuXiW4TlSqqFAufMP1zk38snNJi6B0Arlhk",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgxNTI3ZTA2MTQ0MWExNDFjZjZjNzIiLCJmaXJzdE5hbWUiOiJhbmEiLCJsYXN0TmFtZSI6InNtaXRoIiwiZ2VuZGVyIjoiRmVtYWxlIiwiZW1haWwiOiJhbmFAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiODA5MjA4ODI0IiwiZXhwIjoxNjAyMzIyMDk3LCJpYXQiOjE2MDIzMTg0OTd9.vqUO_yY7QRdFcdwd0i1XeAqbCm4tdZrx_eso25WCViw",
 							"type": "string"
 						}
 					]
@@ -253,6 +253,40 @@
 						"v1",
 						"shop",
 						"costTotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Client Token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgxNTI3ZTA2MTQ0MWExNDFjZjZjNzIiLCJmaXJzdE5hbWUiOiJhbmEiLCJsYXN0TmFtZSI6InNtaXRoIiwiZ2VuZGVyIjoiRmVtYWxlIiwiZW1haWwiOiJhbmFAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiODA5MjA4ODI0IiwiZXhwIjoxNjAyMzIyMDk3LCJpYXQiOjE2MDIzMTg0OTd9.vqUO_yY7QRdFcdwd0i1XeAqbCm4tdZrx_eso25WCViw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "64.227.27.167:3000/api/v1/shop/customerToken",
+					"host": [
+						"64",
+						"227",
+						"27",
+						"167"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"shop",
+						"customerToken"
 					]
 				}
 			},
