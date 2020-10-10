@@ -411,6 +411,7 @@ route.get('/shop/cart',(request,response)=>{
                     var totalPrice = parseFloat(newItem.price)*parseFloat(item.quantity);
                     var discount = (totalPrice*newItem.discount)/100;
                     discountPrice = parseFloat(discountPrice) + (parseFloat(totalPrice)-parseFloat(discount));
+                    newItem.quantity=item.quantity;
                     cart.push(newItem);
                     cnt--;
                     if(cnt==0){
