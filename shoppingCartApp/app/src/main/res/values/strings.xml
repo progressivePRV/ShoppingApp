@@ -5,8 +5,15 @@
     <string name="Signin">Sign In</string>
     <string name="signUp">Sign up</string>
     <string name="FirstName">First Name</string>
-    <string name="lastName" >Last Name</string>
+    <string name="lastName">Last Name</string>
     <string name="Male">Male</string>
     <string name="Female">Female</string>
     <string name="Age">Age</string>
+    <string name="endPointUrl">http://64.227.27.167:3000/</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="show_cart">Go to Cart</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="logout">Logout</string>
+    <string name="proceed_to_pay">Proceed To Pay</string>
+    <string name="total">Total : </string>
 </resources>
