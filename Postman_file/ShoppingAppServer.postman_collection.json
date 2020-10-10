@@ -1,0 +1,263 @@
+{
+	"info": {
+		"_postman_id": "47fe4e07-d66e-4625-8b8b-e81fdd73af43",
+		"name": "ShoppingAppServer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\":\"ana\",\n    \"lastName\":\"smith\",\n    \"gender\":\"Female\",\n    \"email\":\"ana@uncc.edu\",\n    \"password\":\"aditirojatkar\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "64.227.27.167:3000/api/v1/users/signup",
+					"host": [
+						"64",
+						"227",
+						"27",
+						"167"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "ana@uncc.edu",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "aditirojatkar",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "64.227.27.167:3000/api/v1/users/login",
+					"host": [
+						"64",
+						"227",
+						"27",
+						"167"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Items",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgxNTI3ZTA2MTQ0MWExNDFjZjZjNzIiLCJmaXJzdE5hbWUiOiJhbmEiLCJsYXN0TmFtZSI6InNtaXRoIiwiZ2VuZGVyIjoiRmVtYWxlIiwiZW1haWwiOiJhbmFAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiODA5MjA4ODI0IiwiZXhwIjoxNjAyMzE0Mzk4LCJpYXQiOjE2MDIzMTA3OTh9.e36SQXktKuXiW4TlSqqFAufMP1zk38snNJi6B0Arlhk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "64.227.27.167:3000/api/v1/shop/items",
+					"host": [
+						"64",
+						"227",
+						"27",
+						"167"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"shop",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Individual Item",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgxNTI3ZTA2MTQ0MWExNDFjZjZjNzIiLCJmaXJzdE5hbWUiOiJhbmEiLCJsYXN0TmFtZSI6InNtaXRoIiwiZ2VuZGVyIjoiRmVtYWxlIiwiZW1haWwiOiJhbmFAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiODA5MjA4ODI0IiwiZXhwIjoxNjAyMzE0Mzk4LCJpYXQiOjE2MDIzMTA3OTh9.e36SQXktKuXiW4TlSqqFAufMP1zk38snNJi6B0Arlhk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "64.227.27.167:3000/api/v1/shop/items/5",
+					"host": [
+						"64",
+						"227",
+						"27",
+						"167"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"shop",
+						"items",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Images",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgxNTI3ZTA2MTQ0MWExNDFjZjZjNzIiLCJmaXJzdE5hbWUiOiJhbmEiLCJsYXN0TmFtZSI6InNtaXRoIiwiZ2VuZGVyIjoiRmVtYWxlIiwiZW1haWwiOiJhbmFAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiODA5MjA4ODI0IiwiZXhwIjoxNjAyMzE0Mzk4LCJpYXQiOjE2MDIzMTA3OTh9.e36SQXktKuXiW4TlSqqFAufMP1zk38snNJi6B0Arlhk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "64.227.27.167:3000/api/v1/shop/images/oranges.png",
+					"host": [
+						"64",
+						"227",
+						"27",
+						"167"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"shop",
+						"images",
+						"oranges.png"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Shopping Cart",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgxNTI3ZTA2MTQ0MWExNDFjZjZjNzIiLCJmaXJzdE5hbWUiOiJhbmEiLCJsYXN0TmFtZSI6InNtaXRoIiwiZ2VuZGVyIjoiRmVtYWxlIiwiZW1haWwiOiJhbmFAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiODA5MjA4ODI0IiwiZXhwIjoxNjAyMzE0Mzk4LCJpYXQiOjE2MDIzMTA3OTh9.e36SQXktKuXiW4TlSqqFAufMP1zk38snNJi6B0Arlhk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\":5,\n    \"quantity\":1,\n    \"operation\":\"add\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "64.227.27.167:3000/api/v1/shop/items",
+					"host": [
+						"64",
+						"227",
+						"27",
+						"167"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"shop",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cart Total",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgxNTI3ZTA2MTQ0MWExNDFjZjZjNzIiLCJmaXJzdE5hbWUiOiJhbmEiLCJsYXN0TmFtZSI6InNtaXRoIiwiZ2VuZGVyIjoiRmVtYWxlIiwiZW1haWwiOiJhbmFAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiODA5MjA4ODI0IiwiZXhwIjoxNjAyMzE0Mzk4LCJpYXQiOjE2MDIzMTA3OTh9.e36SQXktKuXiW4TlSqqFAufMP1zk38snNJi6B0Arlhk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "64.227.27.167:3000/api/v1/shop/costTotal",
+					"host": [
+						"64",
+						"227",
+						"27",
+						"167"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"shop",
+						"costTotal"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
