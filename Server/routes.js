@@ -378,7 +378,7 @@ route.put('/shop/items',[
 
 });
 
-route.get('/shop/costTotal',(request,response)=>{
+route.get('/shop/cart',(request,response)=>{
     var query = {"userId":new mongo.ObjectID(decoded._id)};
     userItemsCollection.find(query).toArray((err,res)=>{
         if(err){
@@ -405,15 +405,21 @@ route.get('/shop/costTotal',(request,response)=>{
             else{
                 var cnt = items.length;
                 var discountPrice=0.0;
+                var cart=[];
                 items.forEach(item=>{
                     var newItem = data.results.find(it=>it.id==item.id);
                     var totalPrice = parseFloat(newItem.price)*parseFloat(item.quantity);
                     var discount = (totalPrice*newItem.discount)/100;
                     discountPrice = parseFloat(discountPrice) + (parseFloat(totalPrice)-parseFloat(discount));
+                    cart.push(newItem);
                     cnt--;
                     if(cnt==0){
+                        var result = {
+                            "total":discountPrice.toFixed(2),
+                            "cart":cart
+                        }
                         closeConnection();
-                        return response.status(200).json({"total":discountPrice.toFixed(2)});
+                        return response.status(200).json(result);
                     }
                 });
             }
