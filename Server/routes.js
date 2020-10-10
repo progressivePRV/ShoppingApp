@@ -379,4 +379,36 @@ route.get('/shop/costTotal',(request,response)=>{
     });
 });
 
+route.get("/shop/customerToken",(request,response)=>{
+    var query = {"_id":new mongo.ObjectID(decoded._id)};
+    collection.find(query).toArray((err,res)=>{
+        if(err){
+            return response.status(400).json({"error":err});
+        }
+        else if(res.length<=0){
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
+        }
+        else{
+            var user = new User(res[0]).getUser();
+            gateway.clientToken.generate({
+                customerId: user.customerId,
+                options:{
+                    verifyCard: true
+                }
+              }, (err, res) => {
+                  if(err){
+                      return response.status(400).json({"error":err});
+                  }
+                  if(res && res.clientToken){
+                    const clientToken = res.clientToken;
+                    response.status(200).json({"clientToken":clientToken})
+                  }
+                  else{
+                    return response.status(400).json({"error":"client token could not be generated"}); 
+                  }
+              });
+        }
+    });
+});
+
 module.exports = route; 
