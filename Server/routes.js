@@ -45,7 +45,7 @@ var closeConnection = function(){
 var verifyToken = function(req,res,next){
     var headerValue = req.header("Authorization");
     if(!headerValue){
-        closeConnection();
+        //closeConnection();
         return res.status(400).json({"error":"Authorization header needs to be provided for using API"});
     }
 
@@ -57,31 +57,22 @@ var verifyToken = function(req,res,next){
             decoded = jwt.verify(token, tokenSecret);
             next();
           } catch(err) {
-            closeConnection();
+            //closeConnection();
             return res.status(400).json({"error":err});
           }
     }
     else {
-        closeConnection();
+        //closeConnection();
         return res.status(400).json({"error":"Appropriate authentication information needs to be provided"})
     }
 
 };
 
-function isValidDate(value) {
-    if (!value.match(/^\d{4}-\d{2}-\d{2}$/)) return false;
-  
-    const date = new Date(value);
-    if (!date.getTime()) return false;
-    return date.toISOString().slice(0, 10) === value;
-  };
-
 const route = express.Router();
-route.use(connectToUsersDb);
 route.use("/shop",verifyToken);
 route.use("/shop/images",express.static('productImages'));
 
-route.post("/users/signup",[
+route.post("/users/signup",connectToUsersDb,[
     body("firstName","firstName cannot be empty").notEmpty().trim().escape(),
     body("firstName","firstName can have only alphabets").isAlpha().trim().escape(),
     body("lastName","lastName cannot be empty").notEmpty().trim().escape(),
@@ -169,7 +160,7 @@ route.post("/users/signup",[
 }); 
 
 
-route.get("/users/login",[
+route.get("/users/login",connectToUsersDb,[
     header("Authorization","Authorization header required to login").notEmpty().trim()
 ],(request,response)=>{
 
@@ -239,15 +230,15 @@ route.get("/shop/items",(request,response)=>{
     try{
         var rawdata = fs.readFileSync('discount.json');
         if(!rawdata){
-            closeConnection();
+            //closeConnection();
             return response.status(400).json({"error":"No items file found"});
         }
         var items = JSON.parse(rawdata);
-        closeConnection();
+        //closeConnection();
         return response.status(200).json(items);
     }
     catch(error){
-        closeConnection();
+        //closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
@@ -257,41 +248,41 @@ route.get("/shop/items/:id",[
 ],(request,response)=>{
     var err = validationResult(request);
     if(!err.isEmpty()){
-        closeConnection();
+        //closeConnection();
         return response.status(400).json({"error":err});
     }
 
     try{
         var rawdata = fs.readFileSync('discount.json');
         if(!rawdata){
-            closeConnection();
+            //closeConnection();
             return response.status(400).json({"error":"No items file found"});
         }
         var items = JSON.parse(rawdata);
         if(items && items.results && items.results.length>0){
             var item = items.results.find(it=>it.id==request.params.id);
             if(item){
-                closeConnection();
+                //closeConnection();
                 return response.status(200).json(item);
             }
             else{
-                closeConnection();
+                //closeConnection();
                 return response.status(400).json({"error":"No item found with id "+request.params.id});
             }
         }
         else{
-            closeConnection();
+            //closeConnection();
             return response.status(400).json({"error":"No items present"});
         }
         
     }
     catch(error){
-        closeConnection();
+        //closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
 
-route.put('/shop/items',[
+route.put('/shop/items',connectToUsersDb,[
     body('id','id is required for adding item to cart').notEmpty().trim().escape(),
     body('id','id should be an integer value').isInt(),
     body('quantity','quantity is required for adding item to cart').notEmpty().trim().escape(),
@@ -387,7 +378,7 @@ route.put('/shop/items',[
 
 });
 
-route.get('/shop/cart',(request,response)=>{
+route.get('/shop/cart',connectToUsersDb,(request,response)=>{
     var query = {"userId":new mongo.ObjectID(decoded._id)};
     userItemsCollection.find(query).toArray((err,res)=>{
         if(err){
@@ -437,7 +428,7 @@ route.get('/shop/cart',(request,response)=>{
     });
 });
 
-route.get("/shop/customerToken",(request,response)=>{
+route.get("/shop/customerToken",connectToUsersDb,(request,response)=>{
     var query = {"_id":new mongo.ObjectID(decoded._id)};
     collection.find(query).toArray((err,res)=>{
         if(err){
@@ -475,7 +466,7 @@ route.get("/shop/customerToken",(request,response)=>{
     });
 });
 
-route.post("/shop/checkout",[
+route.post("/shop/checkout",connectToUsersDb,[
     body("amount","amount is required to make payment").notEmpty().trim().escape(),
     body("amount","amount should be a numeric value").isNumeric(),
     body("nonce","nonce is required to make payment").notEmpty().trim().escape(),
@@ -560,7 +551,7 @@ route.post("/shop/checkout",[
     });
 });
 
-route.get("/shop/orders",(request,response)=>{
+route.get("/shop/orders",connectToUsersDb,(request,response)=>{
     var query = {"userId":new mongo.ObjectID(decoded._id)};
     userItemsCollection.find(query).toArray((err,res)=>{
         if(err){
@@ -596,11 +587,12 @@ route.get("/shop/orders",(request,response)=>{
             item.items=items;
             orderItems.push(item);
         }
+        closeConnection();
         return response.status(200).json(orderItems);
     });
 });
 
-route.delete("/shop/cart",(request,response)=>{
+route.delete("/shop/cart",connectToUsersDb,(request,response)=>{
     var query = {"userId":new mongo.ObjectID(decoded._id)};
     userItemsCollection.find(query).toArray((err,res)=>{
         if(err){
@@ -630,7 +622,7 @@ route.delete("/shop/cart",(request,response)=>{
     })
 });
 
-route.get("/shop/user/profile",(request,response)=>{
+route.get("/shop/user/profile",connectToUsersDb,(request,response)=>{
     var query = {"_id":new mongo.ObjectID(decoded._id)};
     collection.find(query).toArray((err,res)=>{
         if(err){
