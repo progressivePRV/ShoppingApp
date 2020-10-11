@@ -182,7 +182,7 @@ public class PaymentActivity extends AppCompatActivity {
                 /////////sending data to server
                 String nonce = result.getPaymentMethodNonce().getNonce();
                 String deviceData = result.getDeviceData();
-                sendNounceToSever(deviceData,nonce,"10");
+                new sendNounceToSever(deviceData,nonce,"10").execute();
                 /////////
 
             } else if (resultCode == RESULT_CANCELED) {
@@ -196,65 +196,80 @@ public class PaymentActivity extends AppCompatActivity {
         }
     }
 
-    void sendNounceToSever(String deviceData,String nonce,String amount){
-        final OkHttpClient client = new OkHttpClient();
 
-        //////getting values
-        String address = address_TIET.getText().toString().trim();
-        String city = city_TIET.getText().toString().trim();
-        String state = state_TIET.getText().toString().trim();
-        String pinCode = pinCode_TIET.getText().toString().trim();
-        String phone = phone_TIET.getText().toString().trim();
-        Date d  =  new Date();
+    class sendNounceToSever extends AsyncTask<String ,Void,String>{
 
+        String result = "";
+        String deviceData = "";
+        String nonce = "";
+        String amount = "";
+        String error = "";
 
-        RequestBody formBody = new FormBody.Builder()
-                .add("deviceData", deviceData)
-                .add("date",d.toString())
-                .add("nonce", nonce)
-                .add("amount", amount)
-                .add("address",address)
-                .add("city",city)
-                .add("state",state)
-                .add("zipCode",pinCode)
-                .add("phoneNumber",phone)
-                .build();
+        public sendNounceToSever( String deviceData, String nonce, String amount) {
+            this.deviceData = deviceData;
+            this.nonce = nonce;
+            this.amount = amount;
+        }
 
-        Request request = new Request.Builder()
-                .url(getResources().getString(R.string.endPointUrl)+"api/v1/shop/checkout")
-                .header("Authorization", "Bearer "+ preferences.getString("TOKEN_KEY", null))
-                .post(formBody)
-                .build();
+        @Override
+        protected String doInBackground(String... strings) {
+            Log.d(TAG, "doInBackground: sending nonce to server");
+            final OkHttpClient client = new OkHttpClient();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
+            //////getting values
+            String address = address_TIET.getText().toString().trim();
+            String city = city_TIET.getText().toString().trim();
+            String state = state_TIET.getText().toString().trim();
+            String pinCode = pinCode_TIET.getText().toString().trim();
+            String phone = phone_TIET.getText().toString().trim();
+            Date d  =  new Date();
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    Log.d(TAG, "onResponse: sending the nonce body is =>"+responseBody.string());
-                    if (!response.isSuccessful())
-                        throw new IOException("Unexpected code " + response);
+            RequestBody formBody = new FormBody.Builder()
+                    .add("deviceData", deviceData)
+                    .add("date",d.toString())
+                    .add("nonce", nonce)
+                    .add("amount", amount)
+                    .add("address",address)
+                    .add("city",city)
+                    .add("state",state)
+                    .add("zipCode",pinCode)
+                    .add("phoneNumber",phone)
+                    .build();
 
-                    Headers responseHeaders = response.headers();
-                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
-                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                    }
-                    //Log.d(TAG, "onResponse: sending the nonce=>");
-                    //Toast.makeText(PaymentActivity.this, "sent the nounce data sucessful", Toast.LENGTH_SHORT).show();
-                    showPayementSuccefulToast();
-                }catch (Exception e){
-                    Log.d(TAG, "onResponse: error occured while sending the nounce=>"+e.getMessage());
+            Request request = new Request.Builder()
+                    .url(getResources().getString(R.string.endPointUrl)+"api/v1/shop/checkout")
+                    .header("Authorization", "Bearer "+ preferences.getString("TOKEN_KEY", null))
+                    .post(formBody)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                result = response.body().string();
+                Log.d(TAG, "doInBackground: after sending nounce response is=>"+result);
+                Log.d(TAG, "doInBackground: code"+response.code()+" "+response.isSuccessful());
+                if (!response.isSuccessful()){
+                    Log.d(TAG, "doInBackground: error should occure after this");
+                    throw new IOException("Unexpected code " + response);
                 }
+
+            }catch (Exception e){
+                error = e.getMessage();
+                Log.d(TAG, "onResponse: error occured while sending the nounce=>"+e.getMessage());
             }
-        });
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (!result.isEmpty()){
+                Log.d(TAG, "onPostExecute: after sending nonce result=>"+result);
+                Toast.makeText(PaymentActivity.this, "Payment was succefull", Toast.LENGTH_SHORT).show();
+                finish();
+            }else{
+                Log.d(TAG, "onPostExecute:after sending nonce error=>"+error);
+                Toast.makeText(PaymentActivity.this, error, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
-    void showPayementSuccefulToast(){
-        Toast.makeText(this, "Payment was succefull", Toast.LENGTH_SHORT).show();
-        finish();
-    }
 }

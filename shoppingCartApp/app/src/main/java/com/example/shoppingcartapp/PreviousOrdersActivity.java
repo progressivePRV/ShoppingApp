@@ -1,6 +1,8 @@
 package com.example.shoppingcartapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -14,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -24,6 +27,10 @@ public class PreviousOrdersActivity extends AppCompatActivity {
     private static final String TAG = "okay";
     SharedPreferences preferences;
     Gson gson = new Gson();
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    ArrayList<PreviousOrderClass> orders =  new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,13 @@ public class PreviousOrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_previous_orders);
 
         preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
+
+        recyclerView = (RecyclerView) findViewById(R.id.rv_container);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new PreviousOrderAdapter(orders, this);
+        recyclerView.setAdapter(mAdapter);
+
 
         // just for testing
         new GetPreviousOrders().execute();
@@ -72,12 +86,12 @@ public class PreviousOrdersActivity extends AppCompatActivity {
             for(int i=0;i<jsonArray.size();i++ ){
                 JsonObject jsonObject = (JsonObject) jsonArray.get(i);
                 PreviousOrderClass poc = gson.fromJson(jsonObject,PreviousOrderClass.class);
+                orders.add(poc);
                 Log.d(TAG, "onPostExecute: converting to json is successful");
                 Log.d(TAG, "onPostExecute: poc dat="+poc.date);
                 Log.d(TAG, "onPostExecute: poc first item name =>"+poc.items.get(0).name);
             }
-
-
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

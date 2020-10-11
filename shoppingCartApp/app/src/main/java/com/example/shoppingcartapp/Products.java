@@ -15,6 +15,7 @@ public class Products implements Serializable {
     public String toString() {
         return "Products{" +
                 "id=" + id +
+                ", quanity="+ quantity+
                 ", discount=" + discount +
                 ", name='" + name + '\'' +
                 ", photo='" + photo + '\'' +
