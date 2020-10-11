@@ -444,6 +444,7 @@ route.get("/shop/customerToken",(request,response)=>{
             gateway.clientToken.generate({
                 customerId: user.customerId,
                 options:{
+                    failOnDuplicatePaymentMethod: true,
                     verifyCard: true
                 }
               }, (err, res) => {
