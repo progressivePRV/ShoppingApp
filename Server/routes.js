@@ -45,7 +45,7 @@ var closeConnection = function(){
 var verifyToken = function(req,res,next){
     var headerValue = req.header("Authorization");
     if(!headerValue){
-        closeConnection();
+        //closeConnection();
         return res.status(400).json({"error":"Authorization header needs to be provided for using API"});
     }
 
@@ -57,12 +57,12 @@ var verifyToken = function(req,res,next){
             decoded = jwt.verify(token, tokenSecret);
             next();
           } catch(err) {
-            closeConnection();
+            //closeConnection();
             return res.status(400).json({"error":err});
           }
     }
     else {
-        closeConnection();
+        //closeConnection();
         return res.status(400).json({"error":"Appropriate authentication information needs to be provided"})
     }
 
