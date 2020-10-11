@@ -58,6 +58,11 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
                 return true;
 
             case R.id.logout:
+                // log out needs to be handled
+                return true;
+            case R.id.previousOrders:
+                // got to previous order intent
+                Intent i = new Intent(this,PreviousOrdersActivity.class);
                 return true;
 
             default:

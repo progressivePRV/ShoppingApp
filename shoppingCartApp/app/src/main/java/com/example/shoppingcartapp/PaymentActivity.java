@@ -7,17 +7,20 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Date;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -34,6 +37,9 @@ public class PaymentActivity extends AppCompatActivity {
     private float totalPrice = 10;
 
     SharedPreferences preferences;
+    TextInputLayout address_TIL, city_TIL, state_TIL, pinCode_TIL,phone_TIL;
+    TextInputEditText address_TIET, city_TIET, state_TIET, pinCode_TIET,phone_TIET;
+    String global_clientToken = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +47,66 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
         preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
 
+        address_TIL = findViewById(R.id.address_TIL);
+        city_TIL = findViewById(R.id.city_TIL);
+        state_TIL= findViewById(R.id.state_TIL);
+        pinCode_TIL = findViewById(R.id.pinCode_TIL);
+        phone_TIL = findViewById(R.id.phone_TIL);
+        address_TIET = findViewById(R.id.address_TIET);
+        city_TIET = findViewById(R.id.city_TIET);
+        state_TIET = findViewById(R.id.state_TIET);
+        pinCode_TIET = findViewById(R.id.pinCode_TIET);
+        phone_TIET = findViewById(R.id.phone_TIET);
+
+        findViewById(R.id.confirm_To_Pay_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //validate the fields
+                if(checkValidation() && !global_clientToken.isEmpty()){
+                    onBraintreeSubmit(global_clientToken);
+                }
+            }
+        });
+
         new LoadClientTokenAsync().execute();
 
+    }
+
+    private boolean checkValidation() {
+        if (address_TIET.getText().toString().isEmpty()){
+            address_TIL.setError("can't be empty");
+            return false;
+        }else{
+            address_TIL.setError("");
+        }
+        if (city_TIET.getText().toString().isEmpty()){
+            city_TIL.setError("can't be empty");
+            return false;
+        }else {
+            city_TIL.setError("");
+        }
+        if (state_TIET.getText().toString().isEmpty()){
+            state_TIL.setError("can't be empty");
+            return false;
+        }else {
+            state_TIL.setError("");
+        }
+        if (pinCode_TIET.getText().toString().isEmpty()){
+            pinCode_TIL.setError("can't be empty");
+            return false;
+        }else {
+            pinCode_TIL.setError("");
+        }
+        if (phone_TIET.getText().toString().isEmpty()){
+            phone_TIL.setError("can't be empty");
+            return false;
+        }else if (phone_TIET.getText().toString().length() < 10){
+            phone_TIL.setError("minimum 10 digits and maximum 11 digits");
+            return false;
+        }else{
+            phone_TIL.setError("");
+        }
+        return true;
     }
 
     public class LoadClientTokenAsync extends AsyncTask<String, Void, String> {
@@ -81,7 +145,9 @@ public class PaymentActivity extends AppCompatActivity {
                     JSONObject root = new JSONObject(brainTreeToken);
                     if (isStatus) {
                         String clientToken = root.getString("clientToken");
-                        onBraintreeSubmit(clientToken);
+                        global_clientToken = clientToken;
+                        //it is now called in onclick listner
+//                        onBraintreeSubmit(clientToken);
                         Log.d("demo", clientToken.toString());
                     }else{
                         //some error has occurred.. Have to handle it.
@@ -113,9 +179,9 @@ public class PaymentActivity extends AppCompatActivity {
 //                Log.d("describeCOntents", String.valueOf(result.describeContents()));
                 Log.d(TAG, "Nounce"+result.getPaymentMethodNonce().getNonce());
                 /////////sending data to server
-                String nounce = result.getPaymentMethodNonce().getNonce();
+                String nonce = result.getPaymentMethodNonce().getNonce();
                 String deviceData = result.getDeviceData();
-                sendNounceToSever(deviceData,nounce,"10");
+                sendNounceToSever(deviceData,nonce,"10");
                 /////////
 
             } else if (resultCode == RESULT_CANCELED) {
@@ -129,13 +195,28 @@ public class PaymentActivity extends AppCompatActivity {
         }
     }
 
-    void sendNounceToSever(String deviceData,String nounce,String amount){
+    void sendNounceToSever(String deviceData,String nonce,String amount){
         final OkHttpClient client = new OkHttpClient();
+
+        //////getting values
+        String address = address_TIET.getText().toString().trim();
+        String city = city_TIET.getText().toString().trim();
+        String state = state_TIET.getText().toString().trim();
+        String pinCode = pinCode_TIET.getText().toString().trim();
+        String phone = phone_TIET.getText().toString().trim();
+        Date d  =  new Date();
+
 
         RequestBody formBody = new FormBody.Builder()
                 .add("deviceData", deviceData)
-                .add("nounce", nounce)
+                .add("date",d.toString())
+                .add("nonce", nonce)
                 .add("amount", amount)
+                .add("address",address)
+                .add("city",city)
+                .add("state",state)
+                .add("zipCode",pinCode)
+                .add("phoneNumber",phone)
                 .build();
 
         Request request = new Request.Builder()
@@ -153,6 +234,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    Log.d(TAG, "onResponse: sending the nonce body is =>"+responseBody.string());
                     if (!response.isSuccessful())
                         throw new IOException("Unexpected code " + response);
 
@@ -160,12 +242,18 @@ public class PaymentActivity extends AppCompatActivity {
                     for (int i = 0, size = responseHeaders.size(); i < size; i++) {
                         System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
                     }
-                    System.out.println(responseBody.string());
-                    Toast.makeText(PaymentActivity.this, "sent the nounce data sucessful", Toast.LENGTH_SHORT).show();
+                    //Log.d(TAG, "onResponse: sending the nonce=>");
+                    //Toast.makeText(PaymentActivity.this, "sent the nounce data sucessful", Toast.LENGTH_SHORT).show();
+                    showPayementSuccefulToast();
                 }catch (Exception e){
                     Log.d(TAG, "onResponse: error occured while sending the nounce=>"+e.getMessage());
                 }
             }
         });
+    }
+
+    void showPayementSuccefulToast(){
+        Toast.makeText(this, "Payment was succefull", Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

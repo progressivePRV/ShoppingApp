@@ -16,4 +16,11 @@
     <string name="logout">Logout</string>
     <string name="proceed_to_pay">Proceed To Pay</string>
     <string name="total">Total : </string>
+    <string name="Address">Address</string>
+    <string name="city">City</string>
+    <string name="pincode">Pin Code</string>
+    <string name="confire_btn">Confirm To Pay</string>
+    <string name="Phone">Mobile Number</string>
+    <string name="state">State</string>
+    <string name="previousOrders">Previous Orders</string>
 </resources>

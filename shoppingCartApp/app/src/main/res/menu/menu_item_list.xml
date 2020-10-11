@@ -6,4 +6,7 @@
     <item
         android:id="@+id/logout"
         android:title="@string/logout" />
+    <item
+        android:id="@+id/previousOrders"
+        android:title="@string/previousOrders" />
 </menu>

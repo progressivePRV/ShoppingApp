@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PaymentActivity"></activity>
+        <activity android:name=".PreviousOrdersActivity"></activity>
+        <activity android:name=".PaymentActivity" />
         <activity android:name=".CartCheckoutActivity" />
         <activity android:name=".ProductDetailActivity" />
         <activity android:name=".ShoppingActivity" />
@@ -25,8 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>
