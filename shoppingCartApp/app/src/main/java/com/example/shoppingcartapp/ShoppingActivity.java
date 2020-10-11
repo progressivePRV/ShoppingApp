@@ -124,6 +124,7 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
                 }
                 listofProducts = response.body().string();
             } catch (IOException e) {
+                Log.d("demo","Shopping activity exception");
                 e.printStackTrace();
             }
 

@@ -15,12 +15,12 @@ import java.util.ArrayList;
 
 public class CartListAdapter  extends RecyclerView.Adapter<CartListAdapter.MyViewHolder> {
     private ArrayList<Products> mDataset;
-//    public static InteractWithRecyclerView interact;
+    public static InteractWithRecyclerView interact;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public CartListAdapter(ArrayList<Products> myDataset, Context ctx) {
         mDataset = myDataset;
-//        interact = (InteractWithRecyclerView) ctx;
+        interact = (InteractWithRecyclerView) ctx;
     }
 
     // Create new views (invoked by the layout manager)
@@ -41,16 +41,43 @@ public class CartListAdapter  extends RecyclerView.Adapter<CartListAdapter.MyVie
 
         holder.cartProductName.setText(products.name);
         holder.cartEditTextQuantity.setText(String.valueOf(products.quantity));
-        holder.cartProductPrice.setText(String.valueOf(products.price));
 
+        float discountPrice = (float)products.discount/100;
+        float price = products.price - discountPrice;
+
+        holder.cartProductPrice.setText("$"+price);
+        if(products.productImage != null){
+            holder.cartProductImage.setImageBitmap(products.productImage);
+        }else{
+            holder.cartProductImage.setImageResource(R.drawable.ic_baseline_shopping_basket_24);
+        }
+
+        if(products.quantity > 1){
+            holder.cartButtonQuantityRemove.setEnabled(true);
+        }else{
+            holder.cartButtonQuantityRemove.setEnabled(false);
+        }
+
+        holder.cartButtonQuantityAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                interact.selectedItem(mDataset.get(position).id,"add");
+            }
+        });
+
+        holder.cartButtonQuantityRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                interact.selectedItem(mDataset.get(position).id,"remove");
+            }
+        });
 //
-//        holder.cartDeleteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                interact.selectedItem(position);
-//            }
-//        });
-
+        holder.cartDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                interact.deleteItem(mDataset.get(position));
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -85,10 +112,9 @@ public class CartListAdapter  extends RecyclerView.Adapter<CartListAdapter.MyVie
 
     }
 //
-//    public interface InteractWithRecyclerView{
-//        public void selectedItem(int position);
-//    }
-
-
+    public interface InteractWithRecyclerView{
+        public void selectedItem(int position, String operation);
+        public void deleteItem(Products products);
+    }
 
 }

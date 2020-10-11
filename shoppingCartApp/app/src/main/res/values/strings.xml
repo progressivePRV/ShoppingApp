@@ -23,4 +23,5 @@
     <string name="Phone">Mobile Number</string>
     <string name="state">State</string>
     <string name="previousOrders">Previous Orders</string>
+    <string name="empty_cart">Empty Cart</string>
 </resources>
