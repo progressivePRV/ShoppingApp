@@ -4,9 +4,10 @@
         android:id="@+id/showCart"
         android:title="@string/show_cart" />
     <item
-        android:id="@+id/logout"
-        android:title="@string/logout" />
-    <item
         android:id="@+id/previousOrders"
         android:title="@string/previousOrders" />
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout" />
+
 </menu>

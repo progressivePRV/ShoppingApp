@@ -63,6 +63,7 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
             case R.id.previousOrders:
                 // got to previous order intent
                 Intent i = new Intent(this,PreviousOrdersActivity.class);
+                startActivity(i);
                 return true;
 
             default:
