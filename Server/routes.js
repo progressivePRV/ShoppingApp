@@ -587,6 +587,7 @@ route.get("/shop/orders",connectToUsersDb,(request,response)=>{
             item.items=items;
             orderItems.push(item);
         }
+        closeConnection();
         return response.status(200).json(orderItems);
     });
 });
