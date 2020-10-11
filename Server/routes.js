@@ -10,7 +10,7 @@ const fs = require('fs');
 
 const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://rojatkaraditi:AprApr_2606@test.z8ya6.mongodb.net/project5DB?retryWrites=true&w=majority";
-var client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
+var client;
 var collection;
 var userItemsCollection;
 const tokenSecret = "wFq9+ssDbT#e2H9^";
@@ -68,6 +68,14 @@ var verifyToken = function(req,res,next){
 
 };
 
+function isValidDate(value) {
+    if (!value.match(/^\d{4}-\d{2}-\d{2}$/)) return false;
+  
+    const date = new Date(value);
+    if (!date.getTime()) return false;
+    return date.toISOString().slice(0, 10) === value;
+  };
+
 const route = express.Router();
 route.use(connectToUsersDb);
 route.use("/shop",verifyToken);
@@ -124,7 +132,8 @@ route.post("/users/signup",[
                             
                             var userItem={
                                 "userId":usr._id,
-                                "cartItems":[]
+                                "cartItems":[],
+                                "previousOrders":[]
                             }
 
                             userItemsCollection.insertOne(userItem,(err,reslt)=>{
@@ -444,7 +453,7 @@ route.get("/shop/customerToken",(request,response)=>{
             gateway.clientToken.generate({
                 customerId: user.customerId,
                 options:{
-                    failOnDuplicatePaymentMethod: true,
+                    //failOnDuplicatePaymentMethod: true,
                     verifyCard: true
                 }
               }, (err, res) => {
@@ -454,7 +463,8 @@ route.get("/shop/customerToken",(request,response)=>{
                   }
                   if(res && res.clientToken){
                     const clientToken = res.clientToken;
-                    response.status(200).json({"clientToken":clientToken})
+                    closeConnection();
+                    return response.status(200).json({"clientToken":clientToken})
                   }
                   else{
                     closeConnection();
@@ -462,6 +472,178 @@ route.get("/shop/customerToken",(request,response)=>{
                   }
               });
         }
+    });
+});
+
+route.post("/shop/checkout",[
+    body("amount","amount is required to make payment").notEmpty().trim().escape(),
+    body("amount","amount should be a numeric value").isNumeric(),
+    body("nonce","nonce is required to make payment").notEmpty().trim().escape(),
+    body("deviceData","deviceData is required to make payment").notEmpty().trim().escape(),
+    body("date","date needs to be provided to checkout").notEmpty().trim().escape(),
+    body("address","address required to checkout").notEmpty().trim().escape(),
+    body("city","city required to checkout").notEmpty().trim().escape(),
+    body("state","state required to checkout").notEmpty().trim().escape(),
+    body("zipCode","zip code required to checkout").notEmpty().trim().escape(),
+    body("zipCode","zip code is invalid").isInt().isLength({min:5,max:5}),
+    body("phoneNumber","phone number needed to checkout").notEmpty().trim().escape(),
+    body("phoneNumber","phone should be valid").isMobilePhone()
+],(request,response)=>{
+    var checkErr = validationResult(request);
+    if(!checkErr.isEmpty()){
+        closeConnection();
+        return response.status(400).json({"error":checkErr});
+    }
+
+    var query = {"userId":new mongo.ObjectID(decoded._id)};
+    userItemsCollection.find(query).toArray((err,res)=>{
+        if(err){
+            closeConnection();
+            return response.status(400).json({"error":err});
+        }
+        if(res.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
+        }
+        var userCart = res[0];
+        if(!userCart.cartItems || !userCart.previousOrders || userCart.cartItems.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"cannot proceed, user cart is improper"});
+        }
+        gateway.transaction.sale({
+            amount: request.body.amount,
+            paymentMethodNonce: request.body.nonce,
+            deviceData: request.body.deviceData,
+            options: {
+              submitForSettlement: true
+            }
+          }, (error, result) => {
+              if(error){
+                  closeConnection();
+                  return response.status(400).json({"error":error});
+              }
+            if (!result.success) {
+                closeConnection();
+                return response.status(400).json({"error":"payment could not be processed"});
+            } else {
+                    
+                    var newPreviousOrder = {
+                        "amount":request.body.amount,
+                        "date":request.body.date,
+                        "address":request.body.address,
+                        "city":request.body.city,
+                        "state":request.body.state,
+                        "zipCode":request.body.zipCode,
+                        "phoneNumber":request.body.phoneNumber,
+                        "items":userCart.cartItems
+                    };
+                    delete userCart._id;
+                    delete userCart.userId;
+                    userCart.previousOrders.push(newPreviousOrder);
+                    userCart.cartItems=[];
+    
+                    var newQuery={$set:userCart};
+                    userItemsCollection.updateOne(query,newQuery,(e,reslt)=>{
+                        if(e){
+                            closeConnection();
+                            return response.status(400).json({"error":e});
+                        }
+                        else{
+                            closeConnection();
+                            return response.status(200).json({"result":"payment successful"});
+                        }
+                    });
+                // closeConnection();
+                // return response.status(200).json({"result":result.transaction});
+            }
+          });
+    });
+});
+
+route.get("/shop/orders",(request,response)=>{
+    var query = {"userId":new mongo.ObjectID(decoded._id)};
+    userItemsCollection.find(query).toArray((err,res)=>{
+        if(err){
+            closeConnection();
+            return response.status(400).json({"error":err});
+        }
+        if(res.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
+        }
+        var userCart = res[0];
+        if(!userCart.previousOrders || userCart.previousOrders.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no previous orders found"});
+        }
+
+        var rawdata = fs.readFileSync('discount.json');
+        if(!rawdata){
+            closeConnection();
+            return response.status(400).json({"error":"No items file found"});
+        }
+        var data = JSON.parse(rawdata);
+
+        var orderItems=[];
+        for(var i=0;i<userCart.previousOrders.length;i++){
+            var item = userCart.previousOrders[i];
+            var items=[];
+            for(var j=0;j<item.items.length;j++){
+                var newItem = data.results.find(it=>it.id==item.items[j].id);
+                newItem.quantity=item.items[j].quantity;
+                items.push(newItem);
+            }
+            item.items=items;
+            orderItems.push(item);
+        }
+        return response.status(200).json(orderItems);
+    });
+});
+
+route.delete("/shop/cart",(request,response)=>{
+    var query = {"userId":new mongo.ObjectID(decoded._id)};
+    userItemsCollection.find(query).toArray((err,res)=>{
+        if(err){
+            closeConnection();
+            return response.status(400).json({"error":err});
+        }
+        if(res.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
+        }
+        var userCart = res[0];
+        if(!userCart.cartItems || userCart.cartItems.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no items found in cart"});
+        }
+        var newQuery={$set:{"cartItems":[]}};
+        userItemsCollection.updateOne(query,newQuery,(e,reslt)=>{
+            if(e){
+                closeConnection();
+                return response.status(400).json({"error":err});
+            }
+            else{
+                closeConnection();
+                return response.status(200).json({"result":"cart emptied"});
+            }
+        })
+    })
+});
+
+route.get("/shop/user/profile",(request,response)=>{
+    var query = {"_id":new mongo.ObjectID(decoded._id)};
+    collection.find(query).toArray((err,res)=>{
+        if(err){
+            closeConnection();
+            return response.status(400).json({"error":err});
+        }
+        if(res.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
+        }
+        var user = new User(res[0]).getUser();
+        closeConnection();
+        return response.status(200).json(user);
     });
 });
 

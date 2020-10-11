@@ -177,6 +177,7 @@ public class PaymentActivity extends AppCompatActivity {
                 Log.d(TAG, "It is coming inside the result OK.. Yay!!!");
                 Log.d(TAG, result.getDeviceData());
 //                Log.d("describeCOntents", String.valueOf(result.describeContents()));
+
                 Log.d(TAG, "Nounce"+result.getPaymentMethodNonce().getNonce());
                 /////////sending data to server
                 String nonce = result.getPaymentMethodNonce().getNonce();

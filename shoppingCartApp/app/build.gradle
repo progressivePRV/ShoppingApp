@@ -38,4 +38,6 @@ dependencies {
     //payment
     implementation 'com.braintreepayments.api:drop-in:4.6.0'
 
+    compile 'com.braintreepayments.api:braintree:2.22.0'
+
 }
