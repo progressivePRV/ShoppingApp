@@ -453,7 +453,7 @@ route.get("/shop/customerToken",(request,response)=>{
             gateway.clientToken.generate({
                 customerId: user.customerId,
                 options:{
-                    failOnDuplicatePaymentMethod: true,
+                    //failOnDuplicatePaymentMethod: true,
                     verifyCard: true
                 }
               }, (err, res) => {
@@ -481,7 +481,6 @@ route.post("/shop/checkout",[
     body("nonce","nonce is required to make payment").notEmpty().trim().escape(),
     body("deviceData","deviceData is required to make payment").notEmpty().trim().escape(),
     body("date","date needs to be provided to checkout").notEmpty().trim().escape(),
-    body("date","date should be of correct format").isDate(),
     body("address","address required to checkout").notEmpty().trim().escape(),
     body("city","city required to checkout").notEmpty().trim().escape(),
     body("state","state required to checkout").notEmpty().trim().escape(),
@@ -504,7 +503,7 @@ route.post("/shop/checkout",[
         }
         if(res.length<=0){
             closeConnection();
-            return response.status(400).json({"error":"no used found with id "+decoded._id});
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
         }
         var userCart = res[0];
         if(!userCart.cartItems || !userCart.previousOrders || userCart.cartItems.length<=0){
@@ -570,7 +569,7 @@ route.get("/shop/orders",(request,response)=>{
         }
         if(res.length<=0){
             closeConnection();
-            return response.status(400).json({"error":"no used found with id "+decoded._id});
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
         }
         var userCart = res[0];
         if(!userCart.previousOrders || userCart.previousOrders.length<=0){
@@ -598,6 +597,53 @@ route.get("/shop/orders",(request,response)=>{
             orderItems.push(item);
         }
         return response.status(200).json(orderItems);
+    });
+});
+
+route.delete("/shop/cart",(request,response)=>{
+    var query = {"userId":new mongo.ObjectID(decoded._id)};
+    userItemsCollection.find(query).toArray((err,res)=>{
+        if(err){
+            closeConnection();
+            return response.status(400).json({"error":err});
+        }
+        if(res.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
+        }
+        var userCart = res[0];
+        if(!userCart.cartItems || userCart.cartItems.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no items found in cart"});
+        }
+        var newQuery={$set:{"cartItems":[]}};
+        userItemsCollection.updateOne(query,newQuery,(e,reslt)=>{
+            if(e){
+                closeConnection();
+                return response.status(400).json({"error":err});
+            }
+            else{
+                closeConnection();
+                return response.status(200).json({"result":"cart emptied"});
+            }
+        })
+    })
+});
+
+route.get("/shop/user/profile",(request,response)=>{
+    var query = {"_id":new mongo.ObjectID(decoded._id)};
+    collection.find(query).toArray((err,res)=>{
+        if(err){
+            closeConnection();
+            return response.status(400).json({"error":err});
+        }
+        if(res.length<=0){
+            closeConnection();
+            return response.status(400).json({"error":"no user found with id "+decoded._id});
+        }
+        var user = new User(res[0]).getUser();
+        closeConnection();
+        return response.status(200).json(user);
     });
 });
 
