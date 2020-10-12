@@ -70,7 +70,7 @@ var verifyToken = function(req,res,next){
 
 const route = express.Router();
 route.use("/shop",verifyToken);
-route.use("/shop/images",express.static('productImages'));
+route.use("/images",express.static('productImages'));
 
 route.post("/users/signup",connectToUsersDb,[
     body("firstName","firstName cannot be empty").notEmpty().trim().escape(),
@@ -226,7 +226,7 @@ route.get("/users/login",connectToUsersDb,[
 
 });
 
-route.get("/shop/items",(request,response)=>{
+route.get("/items",(request,response)=>{
     try{
         var rawdata = fs.readFileSync('discount.json');
         if(!rawdata){
@@ -243,7 +243,7 @@ route.get("/shop/items",(request,response)=>{
     }
 });
 
-route.get("/shop/items/:id",[
+route.get("/items/:id",[
     param('id','id should be an integer value').isInt()
 ],(request,response)=>{
     var err = validationResult(request);
