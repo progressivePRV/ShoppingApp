@@ -37,7 +37,6 @@ import okhttp3.Response;
 
 public class CartCheckoutActivity extends AppCompatActivity implements CartListAdapter.InteractWithRecyclerView{
 
-    private static final String TAG = "okay";
     SharedPreferences preferences;
     ArrayList<Products> cartArrayList = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -139,28 +138,25 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
         @Override
         protected void onPostExecute(String listofProducts) {
             super.onPostExecute(listofProducts);
-            Log.d(TAG, "onPostExecute: got cart string in cartCheckoutActivity=>"+listofProducts);
+
             if (listofProducts != null) {
                 try {
                     JSONObject root = new JSONObject(listofProducts);
                     if (isStatus) {
                         String totalPrice = root.getString("total");
                         cartTotalPrice.setText("$"+totalPrice);
-                        if(!totalPrice.equals("0")){
-                            JSONArray rootArray = root.getJSONArray("cart");
-                            for (int i = 0; i < rootArray.length(); i++) {
-                                JSONObject arrayObject = rootArray.getJSONObject(i);
-                                Products products = new Products();
-                                products.id = arrayObject.getInt("id");
-                                products.discount = arrayObject.getInt("discount");
-                                products.name = arrayObject.getString("name");
-                                products.photo = arrayObject.getString("photo");
-                                products.price = arrayObject.getLong("price");
-                                products.quantity = arrayObject.getInt("quantity");
-                                cartArrayList.add(products);
-                            }
+                        JSONArray rootArray = root.getJSONArray("cart");
+                        for (int i = 0; i < rootArray.length(); i++) {
+                            JSONObject arrayObject = rootArray.getJSONObject(i);
+                            Products products = new Products();
+                            products.id = arrayObject.getInt("id");
+                            products.discount = arrayObject.getInt("discount");
+                            products.name = arrayObject.getString("name");
+                            products.photo = arrayObject.getString("photo");
+                            products.price = arrayObject.getLong("price");
+                            products.quantity = arrayObject.getInt("quantity");
+                            cartArrayList.add(products);
                         }
-
                     }else{
                         //some error has occurred.. Have to handle it.
                         hideProgressBarDialog();
