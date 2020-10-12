@@ -182,7 +182,8 @@ public class PaymentActivity extends AppCompatActivity {
                 /////////sending data to server
                 String nonce = result.getPaymentMethodNonce().getNonce();
                 String deviceData = result.getDeviceData();
-                new sendNounceToSever(deviceData,nonce,"10").execute();
+                String amount = getIntent().getStringExtra("total");
+                new sendNounceToSever(deviceData,nonce,amount).execute();
                 /////////
 
             } else if (resultCode == RESULT_CANCELED) {

@@ -45,6 +45,7 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private TextView cartTotalPrice;
+    String t_Price;
     private ProgressDialog progressDialog;
 
     @Override
@@ -69,6 +70,7 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CartCheckoutActivity.this, PaymentActivity.class);
+                intent.putExtra("total",t_Price);
                 startActivityForResult(intent,PAYMENT_ACTIVITY_REQUEST_CODE);
             }
         });
@@ -157,6 +159,7 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
                     JSONObject root = new JSONObject(listofProducts);
                     if (isStatus) {
                         String totalPrice = root.getString("total");
+                        t_Price = totalPrice;
                         cartTotalPrice.setText("$"+totalPrice);
                         JSONArray rootArray = root.getJSONArray("cart");
                         for (int i = 0; i < rootArray.length(); i++) {
@@ -170,6 +173,7 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
                             products.quantity = arrayObject.getInt("quantity");
                             cartArrayList.add(products);
                         }
+                        findViewById(R.id.buttonProceedToPay).setEnabled(true);
                     }else{
                         //some error has occurred.. Have to handle it.
                         hideProgressBarDialog();
