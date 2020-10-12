@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/product_image_inorderProduct"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_shopping_basket_24" />
+
+    <TextView
+        android:id="@+id/product_name_inorderProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/product_image_inorderProduct"
+        app:layout_constraintStart_toEndOf="@+id/product_image_inorderProduct"
+        app:layout_constraintTop_toTopOf="@+id/product_image_inorderProduct" />
+
+    <TextView
+        android:id="@+id/product_quantity_inOrderProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/product_image_inorderProduct"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/product_image_inorderProduct" />
+
+    <TextView
+        android:id="@+id/product_price_inorderProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/product_quantity_inOrderProduct"
+        app:layout_constraintEnd_toStartOf="@+id/product_quantity_inOrderProduct"
+        app:layout_constraintTop_toTopOf="@+id/product_quantity_inOrderProduct" />
+</androidx.constraintlayout.widget.ConstraintLayout>

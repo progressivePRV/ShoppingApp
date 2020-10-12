@@ -15,11 +15,20 @@ public class Products implements Serializable {
     public String toString() {
         return "Products{" +
                 "id=" + id +
+                ", quanity="+ quantity+
                 ", discount=" + discount +
                 ", name='" + name + '\'' +
                 ", photo='" + photo + '\'' +
                 ", price=" + price +
                 ", productImage=" + productImage +
                 '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

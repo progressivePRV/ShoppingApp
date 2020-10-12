@@ -23,4 +23,10 @@
     <string name="Phone">Mobile Number</string>
     <string name="state">State</string>
     <string name="previousOrders">Previous Orders</string>
+    <string name="empty_cart">Empty Cart</string>
+    <string name="Order_at">Order At</string>
+    <string name="amount">Amount:</string>
+    <string name="Quantity">Quantity</string>
+    <string name="price">Price</string>
+    <string name="Address_colen">"Address:"</string>
 </resources>

@@ -155,6 +155,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 }
                 responseValue = response.body().string();
             } catch (IOException e) {
+                Log.d("demo","Update cart exception");
                 e.printStackTrace();
             }
 
@@ -171,6 +172,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                     root = new JSONObject(s);
                     if(isStatus){
                         Toast.makeText(ProductDetailActivity.this, "Cart updated", Toast.LENGTH_SHORT).show();
+                        finish();
                     }else{
                         //Handling the error scenario here
                         JSONObject error = root.getJSONObject("error");
