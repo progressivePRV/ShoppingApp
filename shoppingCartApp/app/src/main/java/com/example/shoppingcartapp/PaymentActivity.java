@@ -264,10 +264,11 @@ public class PaymentActivity extends AppCompatActivity {
             if (!result.isEmpty()){
                 Log.d(TAG, "onPostExecute: after sending nonce result=>"+result);
                 Toast.makeText(PaymentActivity.this, "Payment was succefull", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
                 finish();
             }else{
                 Log.d(TAG, "onPostExecute:after sending nonce error=>"+error);
-                Toast.makeText(PaymentActivity.this, error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PaymentActivity.this, "Payment failed", Toast.LENGTH_SHORT).show();
             }
         }
     }

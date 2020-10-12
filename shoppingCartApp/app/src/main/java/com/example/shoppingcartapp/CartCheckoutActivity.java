@@ -1,5 +1,6 @@
 package com.example.shoppingcartapp;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +37,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CartCheckoutActivity extends AppCompatActivity implements CartListAdapter.InteractWithRecyclerView{
-
+    static final int PAYMENT_ACTIVITY_REQUEST_CODE = 1111;
+    private static final String TAG = "okay";
     SharedPreferences preferences;
     ArrayList<Products> cartArrayList = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -67,7 +69,7 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CartCheckoutActivity.this, PaymentActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,PAYMENT_ACTIVITY_REQUEST_CODE);
             }
         });
 
@@ -82,6 +84,17 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
         showProgressBarDialog();
         new getCartAsync().execute();
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode==PAYMENT_ACTIVITY_REQUEST_CODE){
+            // paymrnt succesful finih the activity
+            Log.d(TAG, "onActivityResult: if activity is sucessful result should come here");
+            finish();
+        }
     }
 
     @Override

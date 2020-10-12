@@ -10,20 +10,35 @@
 
     <TextView
         android:id="@+id/textView2"
+        style="@style/primarytextcolor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Order_at"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
+        style="@style/primarytextcolor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/amount"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView4"
+        style="@style/primarytextcolor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/Address_colen"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
         android:id="@+id/date_tv_inPreviousOrderLayout"
@@ -43,24 +58,34 @@
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toTopOf="@+id/textView3" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_container"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/address_tv_inPreviousOrderLayout"
+        style="@style/textSizeAndColor"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:maxWidth="300dp"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_container_inPreviousOrderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/BackgroundColor"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/price_tv_inPreviousOrderLayout" />
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/price_tv_inPreviousOrderLayout"
+        tools:layout_editor_absoluteX="10dp" />
+
 
     <TextView
         android:id="@+id/price_tv_inPreviousOrderLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Quantity"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/address_tv_inPreviousOrderLayout" />
 
     <TextView
         android:id="@+id/quantity_tv_inPreviousOrderLayout"
@@ -68,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="@string/price"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toStartOf="@+id/price_tv_inPreviousOrderLayout"
         app:layout_constraintTop_toTopOf="@+id/price_tv_inPreviousOrderLayout" />
 

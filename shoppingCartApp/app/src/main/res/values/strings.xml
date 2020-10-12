@@ -28,4 +28,5 @@
     <string name="amount">Amount:</string>
     <string name="Quantity">Quantity</string>
     <string name="price">Price</string>
+    <string name="Address_colen">"Address:"</string>
 </resources>

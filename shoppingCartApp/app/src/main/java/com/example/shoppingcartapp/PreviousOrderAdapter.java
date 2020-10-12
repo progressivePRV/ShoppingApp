@@ -40,51 +40,55 @@ public class PreviousOrderAdapter extends RecyclerView.Adapter<PreviousOrderAdap
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final boolean[] isOpen = {false};
         final PreviousOrderClass poc = orders.get(position);
         Log.d(TAG, "onBindViewHolder: called in  PreviousOrderAdapter poc is=>"+poc);
-        holder.amount_tv.setText(poc.amount);
+        holder.amount_tv.setText(poc.amount+" $");
+        String addres = poc.address+",\n"+poc.city+",\n"+poc.state+", "+poc.zipCode;
+        holder.address_tv.setText(addres);
         SimpleDateFormat formater =  new SimpleDateFormat("EEE MMM dd hh:mm:ss zzz yyyy");
-        SimpleDateFormat format =  new SimpleDateFormat("dd MMM yyyy hh:mm:ss");
+        SimpleDateFormat format =  new SimpleDateFormat("dd MMM yyyy 'at' hh:mm");
+        Date date = null;
         try {
-            Date date = formater.parse(poc.date);
+            date = formater.parse(poc.date);
             Log.d(TAG, "onBindViewHolder: new date=>"+format.format(date));
         } catch (ParseException e) {
             Log.d(TAG, "onBindViewHolder: was not able to parse the date");
             e.printStackTrace();
         }
-        holder.date_tv.setText(poc.date);
-        RecyclerView recyclerView;
+        holder.date_tv.setText(format.format(date));
+        final RecyclerView recyclerView;
         RecyclerView.Adapter mAdapter;
         RecyclerView.LayoutManager layoutManager;
-        recyclerView = (RecyclerView) holder.rv_container;
+        recyclerView = holder.rv_container;
         layoutManager = new LinearLayoutManager(ctx);
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new PreviousOrderProductAdapter(poc.items,ctx);
         recyclerView.setAdapter(mAdapter);
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Log.d(TAG, "onClick: called for previous order at postion="+position);
-                if (isOpen[0]){
-                    holder.rv_container.setVisibility(View.GONE);
-//                    holder.rv_container.animate()
-//                            .translationY(0)
-//                            .alpha(0.0f);
-                    holder.quantity_tv.setVisibility(View.GONE);
-                    holder.price_tv.setVisibility(View.GONE);
-                    isOpen[0] = false;
-                }else {
-                    holder.rv_container.setVisibility(View.VISIBLE);
-//                    holder.rv_container.animate()
-//                            .translationY(holder.rv_container.getHeight())
-//                            .alpha(0.0f);
-                    holder.quantity_tv.setVisibility(View.VISIBLE);
-                    holder.price_tv.setVisibility(View.VISIBLE);
-                    isOpen[0] = true;
-                }
-            }
-        });
+//        holder.container.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: called for previous order at postion="+position);
+//                if (recyclerView.getVisibility() == View.VISIBLE){
+//                    Log.d(TAG, "onClick: going in if");
+//                    holder.rv_container.setVisibility(View.GONE);
+////                    holder.rv_container.animate()
+////                            .translationY(0)
+////                            .alpha(0.0f);
+////                    holder.quantity_tv.setVisibility(View.GONE);
+////                    holder.price_tv.setVisibility(View.GONE);
+//                    holder.container.refreshDrawableState();
+//                }else{
+//                    Log.d(TAG, "onClick: going in else");
+//                    holder.rv_container.setVisibility(View.VISIBLE);
+////                    holder.rv_container.animate()
+////                            .translationY(holder.rv_container.getHeight())
+////                            .alpha(0.0f);
+////                    holder.quantity_tv.setVisibility(View.VISIBLE);
+////                    holder.price_tv.setVisibility(View.VISIBLE);
+//                    holder.container.refreshDrawableState();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -93,7 +97,7 @@ public class PreviousOrderAdapter extends RecyclerView.Adapter<PreviousOrderAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView date_tv,amount_tv,price_tv,quantity_tv;
+        TextView date_tv,amount_tv,price_tv,quantity_tv,address_tv;
         ConstraintLayout container;
         RecyclerView rv_container;
         public ViewHolder(@NonNull View itemView) {
@@ -101,9 +105,10 @@ public class PreviousOrderAdapter extends RecyclerView.Adapter<PreviousOrderAdap
             amount_tv = itemView.findViewById(R.id.amount_tv_inPreviousOrderLayout);
             date_tv = itemView.findViewById(R.id.date_tv_inPreviousOrderLayout);
             container = itemView.findViewById(R.id.container_inPreviousOrderLayout);
-            price_tv = itemView.findViewById(R.id.price_tv_inPreviousOrderLayout);
-            quantity_tv = itemView.findViewById(R.id.quantity_tv_inPreviousOrderLayout);
-            rv_container = itemView.findViewById(R.id.rv_container);
+//            price_tv = itemView.findViewById(R.id.price_tv_inPreviousOrderLayout);
+//            quantity_tv = itemView.findViewById(R.id.quantity_tv_inPreviousOrderLayout);
+            rv_container = itemView.findViewById(R.id.rv_container_inPreviousOrderLayout);
+            address_tv = itemView.findViewById(R.id.address_tv_inPreviousOrderLayout);
         }
     }
 

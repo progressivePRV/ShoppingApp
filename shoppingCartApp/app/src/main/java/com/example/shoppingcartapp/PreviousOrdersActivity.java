@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -16,7 +17,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,7 +45,7 @@ public class PreviousOrdersActivity extends AppCompatActivity {
 
         preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
 
-        recyclerView = (RecyclerView) findViewById(R.id.rv_container);
+        recyclerView = findViewById(R.id.rv_container_in_previousOrders);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new PreviousOrderAdapter(orders, this);
@@ -51,12 +57,11 @@ public class PreviousOrdersActivity extends AppCompatActivity {
     }
 
     class GetPreviousOrders extends AsyncTask<String, Void, String> {
-        boolean isStatus = true;
 
         @Override
         protected String doInBackground(String... strings) {
             final OkHttpClient client = new OkHttpClient();
-            String jsonString = null;
+            String jsonString = "";
 
             Request request = new Request.Builder()
                     .url(getResources().getString(R.string.endPointUrl)+"api/v1/shop/orders")
@@ -65,11 +70,9 @@ public class PreviousOrdersActivity extends AppCompatActivity {
 
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()){
-                    isStatus = true;
-                }else{
-                    isStatus = false;
+                    jsonString = response.body().string();
                 }
-                jsonString = response.body().string();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -80,18 +83,45 @@ public class PreviousOrdersActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d(TAG, "onPostExecute: Previous order activity s=>"+s);
-            JsonParser parser = new JsonParser();
-            JsonElement tradeElement = parser.parse(s);
-            JsonArray jsonArray = tradeElement.getAsJsonArray();
-            for(int i=0;i<jsonArray.size();i++ ){
-                JsonObject jsonObject = (JsonObject) jsonArray.get(i);
-                PreviousOrderClass poc = gson.fromJson(jsonObject,PreviousOrderClass.class);
-                orders.add(poc);
-                Log.d(TAG, "onPostExecute: converting to json is successful");
-                Log.d(TAG, "onPostExecute: poc dat="+poc.date);
-                Log.d(TAG, "onPostExecute: poc first item name =>"+poc.items.get(0).name);
+            if (!s.isEmpty()){
+                JsonParser parser = new JsonParser();
+                JsonElement tradeElement = parser.parse(s);
+                JsonArray jsonArray = tradeElement.getAsJsonArray();
+                for(int i=0;i<jsonArray.size();i++ ){
+                    JsonObject jsonObject = (JsonObject) jsonArray.get(i);
+                    PreviousOrderClass poc = gson.fromJson(jsonObject,PreviousOrderClass.class);
+                    orders.add(poc);
+                    Log.d(TAG, "onPostExecute: converting to json is successful");
+                    Log.d(TAG, "onPostExecute: poc dat="+poc.date);
+                    Log.d(TAG, "onPostExecute: poc first item name =>"+poc.items.get(0).name);
+                }
+                SortAndNotifyDataSetChange();
+                mAdapter.notifyDataSetChanged();
+            }else{
+                Toast.makeText(PreviousOrdersActivity.this, "Cart is empty", Toast.LENGTH_SHORT).show();
+                finish();
             }
-            mAdapter.notifyDataSetChanged();
+
         }
+    }
+
+    private void SortAndNotifyDataSetChange() {
+        Collections.sort(orders, new Comparator<PreviousOrderClass>() {
+            @Override
+            public int compare(PreviousOrderClass o1, PreviousOrderClass o2) {
+                SimpleDateFormat formater =  new SimpleDateFormat("EEE MMM dd hh:mm:ss zzz yyyy");
+                Date d1 = null;
+                Date d2 = null;
+                try {
+                    d1 = formater.parse(o1.date);
+                    d2 = formater.parse(o2.date);
+                } catch (ParseException e) {
+                    Log.d(TAG, "compare: error while sorting the previous orders=>"+e.getMessage());
+                    e.printStackTrace();
+                }
+                return d2.compareTo(d1);
+            }
+        });
+        mAdapter.notifyDataSetChanged();
     }
 }
