@@ -262,7 +262,7 @@ public class PaymentActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (!result.isEmpty()){
+            if (error.isEmpty()){
                 Log.d(TAG, "onPostExecute: after sending nonce result=>"+result);
                 Toast.makeText(PaymentActivity.this, "Payment was succefull", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
