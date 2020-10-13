@@ -41,6 +41,7 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
     SharedPreferences.Editor editor;
     Gson gson =  new Gson();
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -49,17 +50,41 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        String token_key = preferences.getString("TOKEN_KEY", null);
+        if(token_key==null || token_key.isEmpty()){
+            menu.getItem(0).setEnabled(true);
+            menu.getItem(1).setEnabled(false);
+            menu.getItem(2).setEnabled(false);
+            menu.getItem(3).setEnabled(false);
+        }else{
+            menu.getItem(0).setEnabled(false);
+            menu.getItem(1).setEnabled(true);
+            menu.getItem(2).setEnabled(true);
+            menu.getItem(3).setEnabled(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
         switch (item.getItemId()){
+            case R.id.login_menu:
+                Intent intent = new Intent(ShoppingActivity.this, MainActivity.class);
+                startActivity(intent);
+                return true;
+
             case R.id.showCart:
                 //Still needs to be done, as Aditi is working on it
-                Intent intent = new Intent(ShoppingActivity.this, CartCheckoutActivity.class);
-                startActivity(intent);
+                Intent data = new Intent(ShoppingActivity.this, CartCheckoutActivity.class);
+                startActivity(data);
                 return true;
 
             case R.id.logout:
                 // log out needs to be handled
                 return true;
+
             case R.id.previousOrders:
                 // got to previous order intent
                 Intent i = new Intent(this,PreviousOrdersActivity.class);
@@ -112,8 +137,8 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
             String listofProducts = null;
 
             Request request = new Request.Builder()
-                    .url(getResources().getString(R.string.endPointUrl)+"api/v1/shop/items")
-                    .header("Authorization", "Bearer "+ preferences.getString("TOKEN_KEY", null))
+                    .url(getResources().getString(R.string.endPointUrl)+"api/v1/items")
+//                    .header("Authorization", "Bearer "+ preferences.getString("TOKEN_KEY", null))
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
@@ -161,7 +186,7 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
 
                 if (productsArrayList.size() > 0) {
                     mAdapter.notifyDataSetChanged();
-                    getProductItemImage();
+//                    getProductItemImage();
                 }else{
                     mAdapter.notifyDataSetChanged();
                     Toast.makeText(ShoppingActivity.this, "Sorry no products available for sale now!", Toast.LENGTH_SHORT).show();

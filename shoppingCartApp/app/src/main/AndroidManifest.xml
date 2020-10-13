@@ -17,14 +17,21 @@
         <activity android:name=".PaymentActivity" />
         <activity android:name=".CartCheckoutActivity" />
         <activity android:name=".ProductDetailActivity" />
-        <activity android:name=".ShoppingActivity" />
+        <activity android:name=".ShoppingActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+
+        </activity>
         <activity android:name=".SignUp" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"

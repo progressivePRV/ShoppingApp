@@ -2,6 +2,7 @@ package com.example.shoppingcartapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,6 +46,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_detail);
 
         preferences = getSharedPreferences("TokeyKey", 0);
+
+        String token_key = preferences.getString("TOKEN_KEY", null);
+
 
         String pro =  preferences.getString("PRODUCTS",null);
         products = gson.fromJson(pro, Products.class);
@@ -174,11 +178,25 @@ public class ProductDetailActivity extends AppCompatActivity {
                         Toast.makeText(ProductDetailActivity.this, "Cart updated", Toast.LENGTH_SHORT).show();
                         finish();
                     }else{
+                        Log.d("demo",root.length()+"");
                         //Handling the error scenario here
                         JSONObject error = root.getJSONObject("error");
-                        JSONArray message = error.getJSONArray("errors");
-                        JSONObject arrayObject = message.getJSONObject(0);
-                        Toast.makeText(ProductDetailActivity.this, arrayObject.getString("msg"), Toast.LENGTH_SHORT).show();
+                        //If it comes here it means that the jwt has been expired
+                        if(error.getString("message").equals("jwt expired")){
+                            Toast.makeText(ProductDetailActivity.this, "Session Expired. Please login before you add the items in the cart", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(ProductDetailActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else if (error.getString("message").equals("jwt malformed")) {
+                            //again the user has to go to login page
+                            Toast.makeText(ProductDetailActivity.this, "Please login before you add the items in the cart", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(ProductDetailActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(ProductDetailActivity.this, error.getString("message"), Toast.LENGTH_SHORT).show();
+                            JSONArray message = error.getJSONArray("errors");
+                            JSONObject arrayObject = message.getJSONObject(0);
+                            Toast.makeText(ProductDetailActivity.this, arrayObject.getString("msg"), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

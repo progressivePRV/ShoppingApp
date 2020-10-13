@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class CartListAdapter  extends RecyclerView.Adapter<CartListAdapter.MyViewHolder> {
@@ -36,7 +39,7 @@ public class CartListAdapter  extends RecyclerView.Adapter<CartListAdapter.MyVie
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Products products = mDataset.get(position);
 
         holder.cartProductName.setText(products.name);
@@ -46,8 +49,26 @@ public class CartListAdapter  extends RecyclerView.Adapter<CartListAdapter.MyVie
         float price = products.price - discountPrice;
 
         holder.cartProductPrice.setText("$"+price);
-        if(products.productImage != null){
-            holder.cartProductImage.setImageBitmap(products.productImage);
+//        if(products.productImage != null){
+//            holder.cartProductImage.setImageBitmap(products.productImage);
+//        }else{
+//            holder.cartProductImage.setImageResource(R.drawable.ic_baseline_shopping_basket_24);
+//        }
+
+        if(!products.photo.equals("")){
+            Picasso.get()
+                    .load("http://64.227.27.167:3000/api/v1/images/"+products.photo)
+                    .into(holder.cartProductImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            holder.cartProductImage.setImageResource(R.drawable.ic_baseline_shopping_basket_24);
+                        }
+                    });
         }else{
             holder.cartProductImage.setImageResource(R.drawable.ic_baseline_shopping_basket_24);
         }

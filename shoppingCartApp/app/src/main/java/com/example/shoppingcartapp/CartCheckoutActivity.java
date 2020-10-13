@@ -83,11 +83,14 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
             }
         });
 
-        showProgressBarDialog();
-        new getCartAsync().execute();
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showProgressBarDialog();
+        new getCartAsync().execute();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -174,17 +177,35 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
                             cartArrayList.add(products);
                         }
                         findViewById(R.id.buttonProceedToPay).setEnabled(true);
+
+
                     }else{
                         //some error has occurred.. Have to handle it.
                         hideProgressBarDialog();
-                        Toast.makeText(CartCheckoutActivity.this, "Some error occured!", Toast.LENGTH_SHORT).show();
+                        JSONObject error = root.getJSONObject("error");
+                        //If it comes here it means that the jwt has been expired
+                        if(error.getString("message").equals("jwt expired")){
+                            Toast.makeText(CartCheckoutActivity.this, "Session Expired. Please login before you add the items in the cart", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CartCheckoutActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else if (error.getString("message").equals("jwt malformed")) {
+                            //again the user has to go to login page
+                            Toast.makeText(CartCheckoutActivity.this, "Session Expired. Please login before you add the items in the cart", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CartCheckoutActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(CartCheckoutActivity.this, error.getString("message"), Toast.LENGTH_SHORT).show();
+                            JSONArray message = error.getJSONArray("errors");
+                            JSONObject arrayObject = message.getJSONObject(0);
+                            Toast.makeText(CartCheckoutActivity.this, arrayObject.getString("msg"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CartCheckoutActivity.this, "Some error occured!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (JSONException e) {
                     hideProgressBarDialog();
                     e.printStackTrace();
                 }
                 Log.d("demo", cartArrayList.toString());
-
                 if (cartArrayList.size() > 0) {
                     //For Sorting
                     Collections.sort(cartArrayList, new Comparator<Products>() {
@@ -194,10 +215,11 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
                         }
                     });
                     mAdapter.notifyDataSetChanged();
-                    getProductItemImage();
+                    hideProgressBarDialog();
+//                  getProductItemImage();
                 }else{
                     mAdapter.notifyDataSetChanged();
-                    Toast.makeText(CartCheckoutActivity.this, "Sorry no products available in the cart!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CartCheckoutActivity.this, "Sorry no products can be retrived right now! So going back to the shopping page", Toast.LENGTH_SHORT).show();
                     hideProgressBarDialog();
                     finish();
                 }
@@ -320,7 +342,7 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
                 try {
                     root = new JSONObject(s);
                     if(isStatus){
-                        Toast.makeText(CartCheckoutActivity.this, "Cart updated", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(CartCheckoutActivity.this, "Cart updated", Toast.LENGTH_SHORT).show();
                         new getCartAsync().execute();
                     }else{
                         //Handling the error scenario here

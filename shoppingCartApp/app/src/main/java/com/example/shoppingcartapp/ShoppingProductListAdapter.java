@@ -16,6 +16,9 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class ShoppingProductListAdapter extends RecyclerView.Adapter<ShoppingProductListAdapter.MyViewHolder> {
@@ -41,7 +44,7 @@ public class ShoppingProductListAdapter extends RecyclerView.Adapter<ShoppingPro
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Products products = mDataset.get(position);
 
         holder.textItemName.setText(products.name);
@@ -49,17 +52,32 @@ public class ShoppingProductListAdapter extends RecyclerView.Adapter<ShoppingPro
         float discountPrice = (float)products.discount/100;
         float price = products.price - discountPrice;
 
-        Log.d("demo"," "+price);
+//        Log.d("demo"," "+price);
         holder.textAfterDiscount.setText("$"+price);
         holder.textDiscount.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
         holder.textDiscount.setText("Discount : "+products.discount+"%");
         holder.textActualPrice.setPaintFlags(holder.textActualPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-        if(products.productImage != null){
-            holder.imageItem.setImageBitmap(products.productImage);
+
+        Log.d("demo",products.photo);
+        if(!products.photo.equals("")){
+            Picasso.get()
+                    .load("http://64.227.27.167:3000/api/v1/images/"+products.photo)
+                    .into(holder.imageItem, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            holder.imageItem.setImageResource(R.drawable.ic_baseline_shopping_basket_24);
+                        }
+                    });
         }else{
             holder.imageItem.setImageResource(R.drawable.ic_baseline_shopping_basket_24);
         }
+
 
         holder.productItemConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
