@@ -64,31 +64,31 @@ public class PreviousOrderAdapter extends RecyclerView.Adapter<PreviousOrderAdap
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new PreviousOrderProductAdapter(poc.items,ctx);
         recyclerView.setAdapter(mAdapter);
-//        holder.container.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: called for previous order at postion="+position);
-//                if (recyclerView.getVisibility() == View.VISIBLE){
-//                    Log.d(TAG, "onClick: going in if");
-//                    holder.rv_container.setVisibility(View.GONE);
-////                    holder.rv_container.animate()
-////                            .translationY(0)
-////                            .alpha(0.0f);
-////                    holder.quantity_tv.setVisibility(View.GONE);
-////                    holder.price_tv.setVisibility(View.GONE);
-//                    holder.container.refreshDrawableState();
-//                }else{
-//                    Log.d(TAG, "onClick: going in else");
-//                    holder.rv_container.setVisibility(View.VISIBLE);
-////                    holder.rv_container.animate()
-////                            .translationY(holder.rv_container.getHeight())
-////                            .alpha(0.0f);
-////                    holder.quantity_tv.setVisibility(View.VISIBLE);
-////                    holder.price_tv.setVisibility(View.VISIBLE);
-//                    holder.container.refreshDrawableState();
-//                }
-//            }
-//        });
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: called for previous order at postion="+position);
+                if (recyclerView.getVisibility() == View.VISIBLE){
+                    Log.d(TAG, "onClick: going in if");
+                    holder.rv_container.setVisibility(View.GONE);
+//                    holder.rv_container.animate()
+//                            .translationY(0)
+//                            .alpha(0.0f);
+                    holder.quantity_tv.setVisibility(View.GONE);
+                    holder.price_tv.setVisibility(View.GONE);
+                    holder.container.refreshDrawableState();
+                }else{
+                    Log.d(TAG, "onClick: going in else");
+                    holder.rv_container.setVisibility(View.VISIBLE);
+//                    holder.rv_container.animate()
+//                            .translationY(holder.rv_container.getHeight())
+//                            .alpha(0.0f);
+                    holder.quantity_tv.setVisibility(View.VISIBLE);
+                    holder.price_tv.setVisibility(View.VISIBLE);
+                    holder.container.refreshDrawableState();
+                }
+            }
+        });
     }
 
     @Override
@@ -105,8 +105,8 @@ public class PreviousOrderAdapter extends RecyclerView.Adapter<PreviousOrderAdap
             amount_tv = itemView.findViewById(R.id.amount_tv_inPreviousOrderLayout);
             date_tv = itemView.findViewById(R.id.date_tv_inPreviousOrderLayout);
             container = itemView.findViewById(R.id.container_inPreviousOrderLayout);
-//            price_tv = itemView.findViewById(R.id.price_tv_inPreviousOrderLayout);
-//            quantity_tv = itemView.findViewById(R.id.quantity_tv_inPreviousOrderLayout);
+            price_tv = itemView.findViewById(R.id.price_tv_inPreviousOrderLayout);
+            quantity_tv = itemView.findViewById(R.id.quantity_tv_inPreviousOrderLayout);
             rv_container = itemView.findViewById(R.id.rv_container_inPreviousOrderLayout);
             address_tv = itemView.findViewById(R.id.address_tv_inPreviousOrderLayout);
         }
