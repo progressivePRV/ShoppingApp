@@ -16,6 +16,7 @@ import com.braintreepayments.api.dropin.DropInResult;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,8 +69,12 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
 
-        new LoadClientTokenAsync().execute();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new LoadClientTokenAsync().execute();
     }
 
     private boolean checkValidation() {
@@ -150,8 +155,24 @@ public class PaymentActivity extends AppCompatActivity {
 //                        onBraintreeSubmit(clientToken);
                         Log.d("demo", clientToken.toString());
                     }else{
-                        //some error has occurred.. Have to handle it.
-                        Toast.makeText(PaymentActivity.this, "Some error occured!", Toast.LENGTH_SHORT).show();
+                        //some error has occurred..Handling the error scenarios
+                        JSONObject error = root.getJSONObject("error");
+                        //If it comes here it means that the jwt has been expired
+                        if(error.getString("message").equals("jwt expired")){
+                            Toast.makeText(PaymentActivity.this, "Session Expired. Please login to finish the payment", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else if (error.getString("message").equals("jwt malformed")) {
+                            //again the user has to go to login page
+                            Toast.makeText(PaymentActivity.this, "Please login to finish the payment", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(PaymentActivity.this, error.getString("message"), Toast.LENGTH_SHORT).show();
+                            JSONArray message = error.getJSONArray("errors");
+                            JSONObject arrayObject = message.getJSONObject(0);
+                            Toast.makeText(PaymentActivity.this, arrayObject.getString("msg"), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.example.shoppingcartapp;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
@@ -73,8 +74,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 100 && resultCode == 200){
+            finish();
+        }
+    }
 
-//    private void checkIfUserIsLogedIN() {
+
+    //    private void checkIfUserIsLogedIN() {
 //        preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
 //        String pastTokenKey = preferences.getString("TOKEN_KEY", null);
 //        if(pastTokenKey!=null && !pastTokenKey.equals("")){
@@ -169,9 +178,10 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("USER",gson.toJson(user));
                     editor.commit();
                     Toast.makeText(MainActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, ShoppingActivity.class);
-                    intent.putExtra("UserObject", user);
-                    startActivity(intent);
+//                    Intent intent = new Intent(MainActivity.this, ShoppingActivity.class);
+//                    intent.putExtra("UserObject", user);
+//                    startActivity(intent);
+                    finish();
                 }else{
                     //It means that they are some error while signing up.
                     Toast.makeText(MainActivity.this, root.getString("error"), Toast.LENGTH_SHORT).show();

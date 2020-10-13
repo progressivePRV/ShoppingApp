@@ -52,7 +52,9 @@ public class PreviousOrderProductAdapter extends RecyclerView.Adapter<PreviousOr
         Products p = products.get(position);
         Log.d(TAG, "onBindViewHolder: product is=>"+p);
         holder.productQuantity.setText(""+p.quantity);
-        holder.productPrice.setText(""+p.price);
+        double discountPrice = (double) p.price * ((double)p.discount/100);
+        double price = p.price - discountPrice;
+        holder.productPrice.setText("$"+String.format("%.2f", price));
         holder.productName.setText(p.name);
         GetImageAndSetIt(holder.productImage,p.photo);
     }

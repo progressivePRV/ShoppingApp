@@ -190,8 +190,10 @@ public class SignUp extends AppCompatActivity {
                         editor.commit();
                         Toast.makeText(SignUp.this, "User Successfully created", Toast.LENGTH_LONG).show();
                         Log.d(TAG, "onPostExecute: User Successfully created");
-                        Intent intent = new Intent(SignUp.this, ShoppingActivity.class);
-                        startActivityForResult(intent, 100);
+//                        Intent intent = new Intent(SignUp.this, ShoppingActivity.class);
+//                        startActivityForResult(intent, 100);
+                        Intent intent = new Intent();
+                        setResult(200, intent);
                         finish();
                     }else{
                         //Handling the error scenario here

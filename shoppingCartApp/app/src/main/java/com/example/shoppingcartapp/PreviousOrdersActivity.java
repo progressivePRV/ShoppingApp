@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -50,13 +55,18 @@ public class PreviousOrdersActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new PreviousOrderAdapter(orders, this);
         recyclerView.setAdapter(mAdapter);
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
         // just for testing
         new GetPreviousOrders().execute();
     }
 
     class GetPreviousOrders extends AsyncTask<String, Void, String> {
+
+        String error ="";
 
         @Override
         protected String doInBackground(String... strings) {
@@ -69,8 +79,9 @@ public class PreviousOrdersActivity extends AppCompatActivity {
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
-                if (response.isSuccessful()){
-                    jsonString = response.body().string();
+                jsonString = response.body().string();
+                if (!response.isSuccessful()){
+                    error = jsonString;
                 }
 
             } catch (IOException e) {
@@ -83,7 +94,7 @@ public class PreviousOrdersActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d(TAG, "onPostExecute: Previous order activity s=>"+s);
-            if (!s.isEmpty()){
+            if (error.isEmpty()){
                 JsonParser parser = new JsonParser();
                 JsonElement tradeElement = parser.parse(s);
                 JsonArray jsonArray = tradeElement.getAsJsonArray();
@@ -98,8 +109,42 @@ public class PreviousOrdersActivity extends AppCompatActivity {
                 SortAndNotifyDataSetChange();
                 mAdapter.notifyDataSetChanged();
             }else{
-                Toast.makeText(PreviousOrdersActivity.this, "Cart is empty", Toast.LENGTH_SHORT).show();
-                finish();
+                JSONObject root = null;
+                try {
+                    root = new JSONObject(s);
+
+                    JSONObject error = root.getJSONObject("error");
+                    //If it comes here it means that the jwt has been expired
+                    if(error.getString("message").equals("jwt expired")){
+                        Toast.makeText(PreviousOrdersActivity.this, "Session Expired. Please login to see the previous orders", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(PreviousOrdersActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }else if (error.getString("message").equals("jwt malformed")) {
+                        //again the user has to go to login page
+                        Toast.makeText(PreviousOrdersActivity.this, " Please login to see the previous orders", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(PreviousOrdersActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(PreviousOrdersActivity.this, error.getString("message"), Toast.LENGTH_SHORT).show();
+                        JSONArray message = error.getJSONArray("errors");
+                        JSONObject arrayObject = message.getJSONObject(0);
+                        Toast.makeText(PreviousOrdersActivity.this, arrayObject.getString("msg"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    try {
+                        root = new JSONObject(s);
+                        if(root.getString("error").equals("no previous orders found")){
+                            Toast.makeText(PreviousOrdersActivity.this, "No Previous Orders found", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    } catch (JSONException ex) {
+                        ex.printStackTrace();
+                    }
+//                    e.printStackTrace();
+                }
+
+//             Toast.makeText(PreviousOrdersActivity.this, "Cart is empty", Toast.LENGTH_SHORT).show();
+//                finish();
             }
 
         }
