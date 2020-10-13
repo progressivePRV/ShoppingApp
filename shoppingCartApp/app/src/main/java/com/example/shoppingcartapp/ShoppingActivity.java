@@ -83,6 +83,9 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
 
             case R.id.logout:
                 // log out needs to be handled
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
                 return true;
 
             case R.id.previousOrders:

@@ -159,12 +159,12 @@ public class PaymentActivity extends AppCompatActivity {
                         JSONObject error = root.getJSONObject("error");
                         //If it comes here it means that the jwt has been expired
                         if(error.getString("message").equals("jwt expired")){
-                            Toast.makeText(PaymentActivity.this, "Session Expired. Please login before you add the items in the cart", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PaymentActivity.this, "Session Expired. Please login to finish the payment", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                             startActivity(intent);
                         } else if (error.getString("message").equals("jwt malformed")) {
                             //again the user has to go to login page
-                            Toast.makeText(PaymentActivity.this, "Please login before you add the items in the cart", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PaymentActivity.this, "Please login to finish the payment", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                             startActivity(intent);
                         }else{
