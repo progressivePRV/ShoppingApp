@@ -175,7 +175,7 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
                             products.discount = arrayObject.getInt("discount");
                             products.name = arrayObject.getString("name");
                             products.photo = arrayObject.getString("photo");
-                            products.price = arrayObject.getLong("price");
+                            products.price = arrayObject.getDouble("price");
                             productsArrayList.add(products);
                         }
                     }else{

@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Products implements Serializable {
     int id, discount;
     String name, photo;
-    Long price;
+    double price;
     Bitmap productImage;
     int quantity;
 

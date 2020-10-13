@@ -45,10 +45,10 @@ public class CartListAdapter  extends RecyclerView.Adapter<CartListAdapter.MyVie
         holder.cartProductName.setText(products.name);
         holder.cartEditTextQuantity.setText(String.valueOf(products.quantity));
 
-        float discountPrice = (float)products.discount/100;
-        float price = products.price - discountPrice;
+        double discountPrice = (double) products.price * ((double)products.discount/100);
+        double price = products.price - discountPrice;
 
-        holder.cartProductPrice.setText("$"+price);
+        holder.cartProductPrice.setText("$"+String.format("%.2f", price));
 //        if(products.productImage != null){
 //            holder.cartProductImage.setImageBitmap(products.productImage);
 //        }else{

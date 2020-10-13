@@ -79,10 +79,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         textProductDetailDiscount.setText("Discount: "+products.discount+"%");
         textProductDetailActualPrice.setText("Actual Price: $"+products.price);
 
-        float discountPrice = (float)products.discount/100;
-        float price = products.price - discountPrice;
+        double discountPrice = (double) products.price * ((double)products.discount/100);
+        double price = products.price - discountPrice;
 
-        textActualDetailDiscountPrice.setText("Discount Price: $"+price);
+        textActualDetailDiscountPrice.setText("Discount Price: $"+String.format("%.2f", price));
 
         imageButtonAddQuantity.setOnClickListener(new View.OnClickListener() {
             @Override

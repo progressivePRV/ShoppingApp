@@ -172,7 +172,7 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
                             products.discount = arrayObject.getInt("discount");
                             products.name = arrayObject.getString("name");
                             products.photo = arrayObject.getString("photo");
-                            products.price = arrayObject.getLong("price");
+                            products.price = arrayObject.getDouble("price");
                             products.quantity = arrayObject.getInt("quantity");
                             cartArrayList.add(products);
                         }

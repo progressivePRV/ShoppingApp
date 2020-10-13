@@ -49,11 +49,13 @@ public class ShoppingProductListAdapter extends RecyclerView.Adapter<ShoppingPro
 
         holder.textItemName.setText(products.name);
         holder.textActualPrice.setText("$"+products.price);
-        float discountPrice = (float)products.discount/100;
-        float price = products.price - discountPrice;
+
+        double discountPrice = (double) products.price * ((double)products.discount/100);
+        Log.d("demo",discountPrice+"");
+        double price = products.price - discountPrice;
 
 //        Log.d("demo"," "+price);
-        holder.textAfterDiscount.setText("$"+price);
+        holder.textAfterDiscount.setText("$"+String.format("%.2f", price));
         holder.textDiscount.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
         holder.textDiscount.setText("Discount : "+products.discount+"%");
         holder.textActualPrice.setPaintFlags(holder.textActualPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
