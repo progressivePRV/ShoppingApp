@@ -165,7 +165,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODc2ODc1NjkwMTAzYmI2Njc0MzYiLCJmaXJzdE5hbWUiOiJzYW1teSIsImxhc3ROYW1lIjoiamFub2VzIiwiZ2VuZGVyIjoiRmVtYWxlIiwiYWdlIjozMCwiZW1haWwiOiJzYW1teUBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjQ1NTIsImlhdCI6MTYwMjUyMDk1Mn0.h1D3mRguISBKrG8Jd5OI3uvcQ2gNEXKvAXEUX1r9mNU",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgzNjcxMWUyN2ExNDBmYTE1YmI5YmQiLCJmaXJzdE5hbWUiOiJzYW5zYSIsImxhc3ROYW1lIjoic3RhcmsiLCJnZW5kZXIiOiJGZW1hbGUiLCJlbWFpbCI6InNhbnNhQHVuY2MuZWR1IiwiY3VzdG9tZXJJZCI6IjE0MDAwMzYzMSIsImV4cCI6MTYwMjYzODgzOCwiaWF0IjoxNjAyNjM1MjM4fQ.0rkabbJKdTFtdyHnNnyJO0BVq8_t08Ldcy8mYNZtOQ8",
 							"type": "string"
 						}
 					]
@@ -174,7 +174,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\":7,\n    \"quantity\":1,\n    \"operation\":\"add\"\n}",
+					"raw": "{\n    \"id\":5,\n    \"quantity\":3,\n    \"operation\":\"add\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -208,7 +208,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODc2ODc1NjkwMTAzYmI2Njc0MzYiLCJmaXJzdE5hbWUiOiJzYW1teSIsImxhc3ROYW1lIjoiamFub2VzIiwiZ2VuZGVyIjoiRmVtYWxlIiwiYWdlIjozMCwiZW1haWwiOiJzYW1teUBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjQ1NTIsImlhdCI6MTYwMjUyMDk1Mn0.h1D3mRguISBKrG8Jd5OI3uvcQ2gNEXKvAXEUX1r9mNU",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgzNjcxMWUyN2ExNDBmYTE1YmI5YmQiLCJmaXJzdE5hbWUiOiJzYW5zYSIsImxhc3ROYW1lIjoic3RhcmsiLCJnZW5kZXIiOiJGZW1hbGUiLCJlbWFpbCI6InNhbnNhQHVuY2MuZWR1IiwiY3VzdG9tZXJJZCI6IjE0MDAwMzYzMSIsImV4cCI6MTYwMjYzODgzOCwiaWF0IjoxNjAyNjM1MjM4fQ.0rkabbJKdTFtdyHnNnyJO0BVq8_t08Ldcy8mYNZtOQ8",
 							"type": "string"
 						}
 					]
@@ -276,7 +276,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgzNjcxMWUyN2ExNDBmYTE1YmI5YmQiLCJmaXJzdE5hbWUiOiJzYW5zYSIsImxhc3ROYW1lIjoic3RhcmsiLCJnZW5kZXIiOiJGZW1hbGUiLCJlbWFpbCI6InNhbnNhQHVuY2MuZWR1IiwiY3VzdG9tZXJJZCI6IjE0MDAwMzYzMSIsImV4cCI6MTYwMjQ1MDczMSwiaWF0IjoxNjAyNDQ3MTMxfQ.eGEnCKWVd06ZCpg9sIRSHGDdlxD_g695S3yC2hdFFAA",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg2OTIyOGMzNzk2ZTllYmNiMmJiZTkiLCJmaXJzdE5hbWUiOiJhbGljZSIsImxhc3ROYW1lIjoid29uZGVybGFuZCIsImdlbmRlciI6IkZlbWFsZSIsImVtYWlsIjoiYWxpY2VAdW5jYy5lZHUiLCJjdXN0b21lcklkIjoiMjEwNTUzNzI0IiwiZXhwIjoxNjAyNjU4NDg1LCJpYXQiOjE2MDI2NTQ4ODV9.UWsLFP9dP-eusbq4Y0nGQcSq1162EHgbb13-bjQDy6E",
 							"type": "string"
 						}
 					]
@@ -345,7 +345,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgzNjcxMWUyN2ExNDBmYTE1YmI5YmQiLCJmaXJzdE5hbWUiOiJzYW5zYSIsImxhc3ROYW1lIjoic3RhcmsiLCJnZW5kZXIiOiJGZW1hbGUiLCJlbWFpbCI6InNhbnNhQHVuY2MuZWR1IiwiY3VzdG9tZXJJZCI6IjE0MDAwMzYzMSIsImV4cCI6MTYwMjQ1NjQ2NCwiaWF0IjoxNjAyNDUyODY0fQ.DHChZ-BBCn5JqlA1j-2_rlGIVHVPr_uVQXjxYhCuICA",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgzNjcxMWUyN2ExNDBmYTE1YmI5YmQiLCJmaXJzdE5hbWUiOiJzYW5zYSIsImxhc3ROYW1lIjoic3RhcmsiLCJnZW5kZXIiOiJGZW1hbGUiLCJlbWFpbCI6InNhbnNhQHVuY2MuZWR1IiwiY3VzdG9tZXJJZCI6IjE0MDAwMzYzMSIsImV4cCI6MTYwMjYzODgzOCwiaWF0IjoxNjAyNjM1MjM4fQ.0rkabbJKdTFtdyHnNnyJO0BVq8_t08Ldcy8mYNZtOQ8",
 							"type": "string"
 						}
 					]
@@ -379,7 +379,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgzNjcxMWUyN2ExNDBmYTE1YmI5YmQiLCJmaXJzdE5hbWUiOiJzYW5zYSIsImxhc3ROYW1lIjoic3RhcmsiLCJnZW5kZXIiOiJGZW1hbGUiLCJlbWFpbCI6InNhbnNhQHVuY2MuZWR1IiwiY3VzdG9tZXJJZCI6IjE0MDAwMzYzMSIsImV4cCI6MTYwMjQ2Njk2MCwiaWF0IjoxNjAyNDYzMzYwfQ.YdF7p59QF8Zxn_v-OTXyFSYbdq6GS7f_TPL82wFtskI",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjgzNjcxMWUyN2ExNDBmYTE1YmI5YmQiLCJmaXJzdE5hbWUiOiJzYW5zYSIsImxhc3ROYW1lIjoic3RhcmsiLCJnZW5kZXIiOiJGZW1hbGUiLCJlbWFpbCI6InNhbnNhQHVuY2MuZWR1IiwiY3VzdG9tZXJJZCI6IjE0MDAwMzYzMSIsImV4cCI6MTYwMjYzODgzOCwiaWF0IjoxNjAyNjM1MjM4fQ.0rkabbJKdTFtdyHnNnyJO0BVq8_t08Ldcy8mYNZtOQ8",
 							"type": "string"
 						}
 					]
@@ -388,7 +388,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"amount\":20.00,\n    \"nonce\":\"fake-valid-nonce\",\n    \"deviceData\":{\n        \"correlation_id\":\"4d9bbb65c3a64b9ab433c13ddc0ea612\"\n    },\n    \"date\":\"2019-02-21\",\n    \"address\":\"street\",\n    \"city\":\"city\",\n    \"state\":\"state\",\n    \"zipCode\":28262,\n    \"phoneNumber\":\"1111111111\"\n}",
+					"raw": "{\n    \"nonce\":\"fake-valid-nonce\",\n    \"deviceData\":{\n        \"correlation_id\":\"4d9bbb65c3a64b9ab433c13ddc0ea612\"\n    },\n    \"date\":\"2019-02-21\",\n    \"address\":\"street\",\n    \"city\":\"city\",\n    \"state\":\"state\",\n    \"zipCode\":28262,\n    \"phoneNumber\":\"1111111111\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
