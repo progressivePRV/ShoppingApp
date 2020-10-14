@@ -48,6 +48,9 @@ public class PreviousOrdersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previous_orders);
 
+        setTitle("Previous Orders");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
 
         recyclerView = findViewById(R.id.rv_container_in_previousOrders);
@@ -168,5 +171,11 @@ public class PreviousOrdersActivity extends AppCompatActivity {
             }
         });
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
     }
 }

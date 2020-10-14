@@ -49,9 +49,11 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         String token_key = preferences.getString("TOKEN_KEY", null);
 
-
         String pro =  preferences.getString("PRODUCTS",null);
         products = gson.fromJson(pro, Products.class);
+
+        setTitle(products.name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageProductDetail = findViewById(R.id.imageProductDetail);
         textProductDetailName = findViewById(R.id.textProductDetailName);

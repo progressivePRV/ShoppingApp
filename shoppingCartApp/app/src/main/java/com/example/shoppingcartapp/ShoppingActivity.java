@@ -86,6 +86,7 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.clear();
                 editor.commit();
+                Toast.makeText(this, "Logged Out Successfully", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.previousOrders:
@@ -103,6 +104,9 @@ public class ShoppingActivity extends AppCompatActivity implements ShoppingProdu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping);
+
+        setTitle("Products");
+
         preferences = getApplicationContext().getSharedPreferences("TokeyKey", 0);
 
         recyclerView = (RecyclerView) findViewById(R.id.productsRecyclerView);

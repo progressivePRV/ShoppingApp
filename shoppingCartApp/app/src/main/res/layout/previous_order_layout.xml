@@ -98,11 +98,19 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_container_inPreviousOrderLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/BackgroundColor"
             android:visibility="visible"
             app:layout_constraintTop_toBottomOf="@+id/price_tv_inPreviousOrderLayout"
             tools:layout_editor_absoluteX="10dp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintTop_toBottomOf="@+id/rv_container_inPreviousOrderLayout"
+            tools:layout_editor_absoluteX="1dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

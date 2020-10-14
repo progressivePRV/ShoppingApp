@@ -52,6 +52,10 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart_checkout);
+
+        setTitle("Cart Checkout");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
         cartTotalPrice = findViewById(R.id.cartTotalPrice);
 
@@ -427,5 +431,11 @@ public class CartCheckoutActivity extends AppCompatActivity implements CartListA
     public void hideProgressBarDialog()
     {
         progressDialog.dismiss();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
     }
 }

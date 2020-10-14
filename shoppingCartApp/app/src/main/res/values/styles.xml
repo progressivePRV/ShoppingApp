@@ -5,6 +5,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/custom_toolbar_text_color</item>
+<!--        <item name="title">@color/colorWhite</item>-->
+    </style>
+
+    <style name="custom_toolbar_text_color" parent="Widget.MaterialComponents.Toolbar.Primary">
+      <!--  <item name="titleTextColor">@color/BackgroundColor</item>  Widget.MaterialComponents.ActionBar.Solid-->
+        <item name="colorOnPrimary">@color/BackgroundColor</item>
     </style>
 
     <style name="textInputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

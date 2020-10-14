@@ -46,6 +46,10 @@ public class PaymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
+
+        setTitle("Billing");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
 
         address_TIL = findViewById(R.id.address_TIL);
@@ -250,7 +254,7 @@ public class PaymentActivity extends AppCompatActivity {
                     .add("deviceData", deviceData)
                     .add("date",d.toString())
                     .add("nonce", nonce)
-                    .add("amount", amount)
+//                    .add("amount", amount)
                     .add("address",address)
                     .add("city",city)
                     .add("state",state)
@@ -293,6 +297,12 @@ public class PaymentActivity extends AppCompatActivity {
                 Toast.makeText(PaymentActivity.this, "Payment failed", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
     }
 
 }
