@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,8 +73,20 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         imageButtonRemoveQuantity.setEnabled(false);
 
-        if(products.productImage != null){
-            imageProductDetail.setImageBitmap(products.productImage);
+        if(!products.photo.equals("")){
+            Picasso.get()
+                    .load("http://64.227.27.167:3000/api/v1/images/"+products.photo)
+                    .into(imageProductDetail, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            imageProductDetail.setImageResource(R.drawable.ic_baseline_shopping_basket_24);
+                        }
+                    });
         }else{
             imageProductDetail.setImageResource(R.drawable.ic_baseline_shopping_basket_24);
         }

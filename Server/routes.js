@@ -467,8 +467,6 @@ route.get("/shop/customerToken",connectToUsersDb,(request,response)=>{
 });
 
 route.post("/shop/checkout",connectToUsersDb,[
-    body("amount","amount is required to make payment").notEmpty().trim().escape(),
-    body("amount","amount should be a numeric value").isNumeric(),
     body("nonce","nonce is required to make payment").notEmpty().trim().escape(),
     body("deviceData","deviceData is required to make payment").notEmpty().trim().escape(),
     body("date","date needs to be provided to checkout").notEmpty().trim().escape(),
@@ -501,8 +499,28 @@ route.post("/shop/checkout",connectToUsersDb,[
             closeConnection();
             return response.status(400).json({"error":"cannot proceed, user cart is improper"});
         }
+
+        //code goes here:
+        var discountPrice=parseFloat(0.0);
+        var cartItems = userCart.cartItems;
+
+        var rawdata = fs.readFileSync('discount.json');
+        if(!rawdata){
+            closeConnection();
+            return response.status(400).json({"error":"No items file found"});
+        }
+        var data = JSON.parse(rawdata);
+
+        for(var i=0;i<cartItems.length;i++){
+            var item = cartItems[i];
+            var newItem = data.results.find(it=>it.id==item.id);
+            var totalPrice = parseFloat(newItem.price)*parseFloat(item.quantity);
+            var discount = parseFloat((totalPrice*newItem.discount)/100);
+            discountPrice = parseFloat(discountPrice) + (parseFloat(totalPrice)-parseFloat(discount));
+        }
+
         gateway.transaction.sale({
-            amount: request.body.amount,
+            amount: discountPrice.toFixed(2),
             paymentMethodNonce: request.body.nonce,
             deviceData: request.body.deviceData,
             options: {
@@ -515,18 +533,52 @@ route.post("/shop/checkout",connectToUsersDb,[
               }
             if (!result.success) {
                 closeConnection();
-                return response.status(400).json({"error":"payment could not be processed"});
+                console.log(result);
+                return response.status(400).json({"error":"payment could not be processed. "+result.params.message});
             } else {
+                    var transaction = result.transaction;
+                    //console.log(result.transaction);
+                    var customer = result.transaction.customer;
+                    var card = result.transaction.creditCard;
+
+                    var creditCard = {
+                        "maskedNumber":card.maskedNumber,
+                        "expirationDate":card.expirationDate,
+                        "cardType":card.cardType,
+                        "customerLocation":card.customerLocation,
+                        "cardholderName":card.cardholderName
+                    };
+
+                    var cust = {
+                        "id":customer.id,
+                        "firstName":customer.firstName,
+                        "lastName":customer.lastName,
+                        "email":customer.email,
+                    };
+                
+                    var transcationData={
+                        "id":transaction.id,
+                        "status":transaction.status,
+                        "type":transaction.type,
+                        "currencyIsoCode":transaction.currencyIsoCode,
+                        "amount":transaction.amount,
+                        "merchantAccountId":transaction.merchantAccountId,
+                        "createdAt":transaction.createdAt,
+                        "updatedAt":transaction.updatedAt,
+                        "customer":cust,
+                        "creditCard":creditCard
+                    };
                     
                     var newPreviousOrder = {
-                        "amount":request.body.amount,
+                        "amount":discountPrice.toFixed(2),
                         "date":request.body.date,
                         "address":request.body.address,
                         "city":request.body.city,
                         "state":request.body.state,
                         "zipCode":request.body.zipCode,
                         "phoneNumber":request.body.phoneNumber,
-                        "items":userCart.cartItems
+                        "transaction":transcationData,
+                        "items":userCart.cartItems,
                     };
                     delete userCart._id;
                     delete userCart.userId;
@@ -585,6 +637,7 @@ route.get("/shop/orders",connectToUsersDb,(request,response)=>{
                 items.push(newItem);
             }
             item.items=items;
+            delete item.transaction;
             orderItems.push(item);
         }
         closeConnection();
