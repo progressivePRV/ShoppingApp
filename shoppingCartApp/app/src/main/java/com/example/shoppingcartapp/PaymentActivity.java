@@ -103,13 +103,16 @@ public class PaymentActivity extends AppCompatActivity {
         if (pinCode_TIET.getText().toString().isEmpty()){
             pinCode_TIL.setError("can't be empty");
             return false;
-        }else {
+        }else if(pinCode_TIET.getText().toString().length()>5){
+            pinCode_TIL.setError("can't be greater than 5");
+            return false;
+        } else{
             pinCode_TIL.setError("");
         }
         if (phone_TIET.getText().toString().isEmpty()){
             phone_TIL.setError("can't be empty");
             return false;
-        }else if (phone_TIET.getText().toString().length() < 10){
+        }else if (10 < phone_TIET.getText().toString().length() && phone_TIET.getText().toString().length() < 11){
             phone_TIL.setError("minimum 10 digits and maximum 11 digits");
             return false;
         }else{
