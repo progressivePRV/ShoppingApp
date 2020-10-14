@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "47fe4e07-d66e-4625-8b8b-e81fdd73af43",
+		"_postman_id": "323c6851-5700-4f95-9f85-059b46428274",
 		"name": "ShoppingAppServer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -388,7 +388,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nonce\":\"fake-valid-nonce\",\n    \"deviceData\":{\n        \"correlation_id\":\"4d9bbb65c3a64b9ab433c13ddc0ea612\"\n    },\n    \"date\":\"2019-02-21\",\n    \"address\":\"street\",\n    \"city\":\"city\",\n    \"state\":\"state\",\n    \"zipCode\":28262,\n    \"phoneNumber\":\"1111111111\"\n}",
+					"raw": "{\n    \"nonce\":\"fake-valid-nonce\",\n    \"deviceData\":{\n        \"correlation_id\":\"4d9bbb65c3a64b9ab433c13ddc0ea612\"\n    },\n    \"date\":\"Sun Oct 11 02:41:38 EDT 2020\",\n    \"address\":\"street\",\n    \"city\":\"city\",\n    \"state\":\"state\",\n    \"zipCode\":28262,\n    \"phoneNumber\":\"1111111111\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
